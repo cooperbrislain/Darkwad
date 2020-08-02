@@ -1,7 +1,4 @@
-#include "Arduino.h"
-#include "PubSubClient.h"
 #include "light.h"
-#include "config.h"
 
 void Light::update() {
     (this->*_prog)(_params[1]);

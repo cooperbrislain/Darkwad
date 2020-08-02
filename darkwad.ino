@@ -2,7 +2,8 @@
 
 CRGB leds[NUM_LEDS];
 Light lights[NUM_LIGHTS];
-TouchControl controls[NUM_CONTROLS];
+Control controls[NUM_CONTROLS];
+
 int speed = GLOBAL_SPEED;
 int count = 0;
 
@@ -49,7 +50,7 @@ void setup() {
     Serial.println("Light Mapping Initialized");
 
     #ifdef CONTROLS
-        controls[0] = TouchControl("left", T8, 20,
+        controls[0] = Control("left", T8, Control::CTL_DIGITAL,
                 [](int val) {
                     lights[2].set_program("chase");
                     lights[2].set_param(0,25);
@@ -58,7 +59,7 @@ void setup() {
                 [](int val) { Serial.println("LEFT"); },
                 [](int val) { lights[2].set_on(0); }
             );
-            controls[1] = TouchControl("right", T9, 20,
+            controls[1] = Control("right", T9, Control::CTL_DIGITAL,
                 [](int val) {
                     lights[3].set_program("chase");
                     lights[3].set_param(0,25);
@@ -70,16 +71,19 @@ void setup() {
                     lights[3].set_on(0);
                 }
             );
-            controls[2] = TouchControl("Green", T5, 25,
+            controls[2] = Control("Green", T5, Control::CTL_TOUCH,
                 [](int val) { lights[1].turn_on(); },
                 [](int val) { Serial.println("GREEN"); },
                 [](int val) { lights[1].set_on(0); }
             );
-            controls[3] = TouchControl("Red", T3, TOUCH_THRESHOLD,
+            controls[3] = Control("Red", T3, Control::CTL_DIGITAL,
                 [](int val) { lights[4].turn_on(); },
                 [](int val) { Serial.println("RED"); },
                 [](int val) { lights[4].set_on(0); }
             );
+//            controls[4] = AnalogControl("X", T0);
+//            controls[5] = AnalogControl("Y", T1);
+//            controls[6] = ButtonControl("Z", T2);
     #endif // CONTROLS
 
     delay(150);
@@ -88,9 +92,7 @@ void setup() {
 // MAIN LOOP
 
 void loop() {
-    #ifdef TOUCH
-        for (int i=0; i<NUM_CONTROLS; i++) controls[i].update();
-    #endif
+    for (int i=0; i<NUM_CONTROLS; i++) controls[i].update();
     for (int i=0; i<NUM_LIGHTS; i++)
         if (count%lights[i].get_param(0) == 0)
             lights[i].update();

@@ -11,7 +11,7 @@
 #include "config.h"
 
 #include "light.h"
-#include "touchcontrol.h"
+#include "control.h"
 
 //#include "esp_wifi.h"
 //#include "esp_log.h"

@@ -23,7 +23,6 @@
 
 #define CONTROLS
 #define NUM_CONTROLS 4
-#define TOUCH
 #define TOUCH_THRESHOLD 1
 
 #endif // DARKWAD_CONFIG_H

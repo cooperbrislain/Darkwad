@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <FastLED.h>
-#include <PubSubClient.h>
 #include "config.h"
 
 class Light {
