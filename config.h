@@ -1,7 +1,7 @@
 #ifndef DARKWAD_CONFIG_H
 #define DARKWAD_CONFIG_H
 
-#define DEBUG
+//#define DEBUG
 
 #define DEVICE_NAME "darkwad"
 #define MQTT_CLID "darkwad"
