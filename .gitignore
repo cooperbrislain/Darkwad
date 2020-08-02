@@ -6,7 +6,5 @@
 sdkconfig
 cmake-build-debug
 cmake-build-xtensa
-config.h
 mqpass
-mqtt_ledstrip.h
-mqtt_ledstrip.ino
+config.h

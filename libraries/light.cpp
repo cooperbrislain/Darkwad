@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "PubSubClient.h"
 #include "light.h"
-#include "config.h"
+#include "../config.h"
 
 void Light::subscribe(PubSubClient *mqtt_client) {
     char device[128];

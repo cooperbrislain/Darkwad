@@ -2,7 +2,7 @@
 #define MQTT_LEDSTRIP_TOUCHCONTROL_H
 
 #include "Arduino.h"
-#include "config.h"
+#include "../config.h"
 
 #define TOUCH_PIN T0
 

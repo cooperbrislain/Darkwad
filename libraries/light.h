@@ -5,7 +5,7 @@
 #include <SPI.h>
 #include <FastLED.h>
 #include <PubSubClient.h>
-#include "config.h"
+#include "../config.h"
 
 class Light {
     public:
