@@ -1,11 +1,8 @@
-#ifndef MQTT_LEDSTRIP_LIGHT_H
-#define MQTT_LEDSTRIP_LIGHT_H
-
 #include <Arduino.h>
 #include <SPI.h>
 #include <FastLED.h>
 #include <PubSubClient.h>
-#include "../config.h"
+#include "config.h"
 
 class Light {
     public:
@@ -65,7 +62,6 @@ class Light {
         CRGB get_rgb();
         CHSV get_hsv();
         void update();
-        void subscribe(PubSubClient *mqtt_client);
     private:
         CRGB** _leds;
         CRGB _color;
@@ -89,13 +85,7 @@ class Light {
         int _prog_fadein(int x);
         int _prog_longfade(int x);
         int (Light::*_prog)(int x);
-        // void add_to_homebridge();
-        #ifdef ARTNET
-            int _prog_artnet(int x);
-        #endif
 };
 
 uint8_t nblendU8TowardU8(uint8_t cur, const uint8_t target, uint8_t x);
 CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x);
-
-#endif //MQTT_LEDSTRIP_LIGHT_H

@@ -1,8 +1,5 @@
-#ifndef MQTT_LEDSTRIP_TOUCHCONTROL_H
-#define MQTT_LEDSTRIP_TOUCHCONTROL_H
-
 #include "Arduino.h"
-#include "../config.h"
+#include "config.h"
 
 #define TOUCH_PIN T0
 
@@ -72,5 +69,3 @@ class TouchControl {
         ControlFn _releaseFn;
         ControlFn _stilldownFn;
 };
-
-#endif //MQTT_LEDSTRIP_TOUCHCONTROL_H

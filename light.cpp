@@ -1,22 +1,7 @@
 #include "Arduino.h"
 #include "PubSubClient.h"
 #include "light.h"
-#include "../config.h"
-
-void Light::subscribe(PubSubClient *mqtt_client) {
-    char device[128];
-    sprintf(device, "/%s/%s", DEVICE_NAME, _name.c_str());
-    String feed = device;
-    if (!mqtt_client->connected()) {
-//        Serial.println("Not Connected");
-    } else if(!mqtt_client->subscribe(feed.c_str())) {
-//        Serial.print("Failed to subscribe to feed: ");
-//        Serial.println(feed);
-    } else {
-//        Serial.print("Subscribed to feed: ");
-//        Serial.println(feed);
-    }
-}
+#include "config.h"
 
 void Light::update() {
     (this->*_prog)(_params[1]);
@@ -251,40 +236,6 @@ int Light::_prog_blink(int x) {
     return 0;
 }
 
-#ifdef ARTNET
-    void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* data, IPAddress remoteIP) {
-        sendFrame = 1;
-
-        if ((universe - startUniverse) < maxUniverses)
-        universesReceived[universe - startUniverse] = 1;
-
-        for (int i = 0 ; i < maxUniverses ; i++) {
-            if (universesReceived[i] == 0) {
-                sendFrame = 0;
-                break;
-            }
-        }
-
-        for (int i = 0; i < length / 3; i++) {
-            int led = i + (universe - startUniverse) * (previousDataLength / 3);
-            if (led < NUM_LEDS) {
-                artnet_leds[led] = CRGB(data[i*3], data[i*3+1], data[i*3+2]);
-            }
-        }
-        previousDataLength = length;
-
-        if (sendFrame) {
-            memset(universesReceived, 0, maxUniverses);
-        }
-    }
-
-    int Light::_prog_artnet(int x) {
-        for (int i=0; i<_num_leds; i++) {
-           & _leds[i] = artnet_leds[_offset+i];
-        }
-    }
-#endif
-
 // Helper Functions
 
 CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x) {
@@ -297,15 +248,14 @@ CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x) {
 
 uint8_t nblendU8TowardU8(uint8_t cur, const uint8_t target, uint8_t x) {
     uint8_t newc;
-    if (cur == target) return newc = cur;
+    if (cur == target) return cur;
     if (cur < target) {
         uint8_t delta = target - cur;
         delta = scale8_video(delta, x);
-        newc = cur + delta;
+        return cur + delta;
     } else {
         uint8_t delta = cur - target;
         delta = scale8_video(delta, x);
-        newc = cur - delta;
+        return cur - delta;
     }
-    return newc;
 }

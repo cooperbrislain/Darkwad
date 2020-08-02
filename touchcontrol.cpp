@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "touchcontrol.h"
-#include "../config.h"
+#include "config.h"
 
 void TouchControl::update() {
     int val = touchRead(_pin);
