@@ -5,8 +5,8 @@
 > [Darkwad](https://burningman.org/culture/glossary/)
 : Anyone who walks or rides on the playa at night without adequate lighting on the front and back of his/her person or vehicle. 
 See also: 
-[_“Survival-challenged.”_](https://burningman.org/culture/glossary/)
-[_Decommodification._](https://burningman.org/culture/glossary/)  
+[_Survival-challenged._](https://burningman.org/culture/glossary/#survivallychallenged)
+[_Decommodification._](https://burningman.org/culture/glossary/#decommodification)  
 
 _~ [Burning Man Glossary](https://burningman.org/culture/glossary/)_
 
