@@ -7,27 +7,31 @@ Control controls[NUM_CONTROLS];
 int speed = GLOBAL_SPEED;
 int count = 0;
 
-// SETUP
-
 void setup() {
     Serial.begin(115200);
-    Serial.println("Starting up LED Controller");
+
+    Serial << "Darkwad Lighting Up";
+
     delay(10);
+
     FastLED.setBrightness(BRIGHTNESS_SCALE);
     FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, BGR, DATA_RATE_MHZ(24)>(leds, NUM_LEDS);
 
     blink();
 
-    Serial.println("LEDs initialized");
+    Serial << "LEDs initialized";
 
     #ifdef BUMP_LED
         lights[0] = Light("bump", &leds[0], 0, 1);
     #endif
+
+//  Bike Mapping
 //        lights[1] = Light("front", &leds[1], 0, 25); // FRONT
 //        lights[2] = Light("left", &leds[1], 25, 25, 1); // LEFT
 //        lights[3] = Light("right", &leds[1], 50, 25); // RIGHT
 //        lights[4] = Light("rear", &leds[1], 75, 25); // REAR
-    /* Test setup */
+
+//  Test Bar Mapping
     lights[2] = Light("left", &leds[1], 0, 5, 1);
     lights[1] = Light("front", &leds[1], 7, 11);
     lights[3] = Light("right", &leds[1], 20, 5);
@@ -47,7 +51,7 @@ void setup() {
         light.blink();
     }
 
-    Serial.println("Light Mapping Initialized");
+    Serial << "It's lit fam!";
 
     pinMode(T8, INPUT);
     pinMode(T9, INPUT);
@@ -56,12 +60,12 @@ void setup() {
     #ifdef CONTROLS
         controls[0] = Control("left", T8, Control::CTL_DIGITAL,
                 [](int val) {
-                    lights[2].set_program("chase");
-                    lights[2].set_param(0,25);
-                    lights[2].set_param(1,50);
-                    lights[2].set_on(1); },
+                    lights[1].set_program("chase");
+                    lights[1].set_param(0,25);
+                    lights[1].set_param(1,50);
+                    lights[1].set_on(1); },
                 [](int val) { Serial << "LEFT" << '\n'; },
-                [](int val) { lights[2].set_on(0); }
+                [](int val) { lights[1].set_on(0); }
             );
             controls[1] = Control("right", T9, Control::CTL_DIGITAL,
                 [](int val) {
@@ -76,9 +80,9 @@ void setup() {
                 }
             );
             controls[2] = Control("button", 12, Control::CTL_TOUCH,
-                [](int val) { lights[1].turn_on(); },
+                [](int val) { lights[2].turn_on(); },
                 [](int val) { Serial << "BUTTON" << '\n'; },
-                [](int val) { lights[1].set_on(0); }
+                [](int val) { lights[2].set_on(0); }
             );
             controls[3] = Control("brake", 14, Control::CTL_DIGITAL,
                 [](int val) { lights[4].turn_on(); },
@@ -89,6 +93,8 @@ void setup() {
 //            controls[5] = AnalogControl("Y", T1);
 //            controls[6] = ButtonControl("Z", T2);
     #endif // CONTROLS
+
+    blackout();
 
     delay(150);
 }

@@ -5,7 +5,7 @@ void Control::update() {
     #ifdef DEBUG
         Serial << _name << '[' << _type << '(' << _pin << ")]:" << val << '[' << _pressed << ']' << '\n';
     #endif
-    if ((_type == CTL_TOUCH && val <= _threshold) || (_type == CTL_DIGITAL && val == 1)) {
+    if (val > 0) {
         _pressed++;
         if (_pressed == 10) _pressFn(val);
         if (_pressed > 20) _stilldownFn(val);
@@ -16,12 +16,15 @@ void Control::update() {
 }
 
 int Control::read() {
+    int val;
     switch (_type) {
         case CTL_TOUCH:
-            return touchRead(_pin) <= _threshold? 1 : 0;
+            val = touchRead(_pin);
+            return (val <= _threshold)? 1 : 0;
         default:
         case CTL_DIGITAL:
-            return digitalRead(_pin) == HIGH? 1 : 0;
+            val = digitalRead(_pin);
+            return (val == HIGH)? 1 : 0;
         case CTL_ANALOG:
             return analogRead(_pin);
     }

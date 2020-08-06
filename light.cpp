@@ -43,12 +43,9 @@ void Light::blink() {
 }
 
 void Light::toggle() {
-    Serial.println(_onoff);
     if (_onoff) {
-        Serial.println("OFF");
         turn_off();
     } else {
-        Serial.println("ON");
         turn_on();
     }
 }
@@ -104,9 +101,6 @@ void Light::set_program(const char* program) {
         _params[0] = 50;
     }
     if (strcmp(program, "lfo")==0) _prog = &Light::_prog_lfo;
-#ifdef ARTNET
-    if (strcmp(program, "artnet")==0) _prog = &Light::_prog_artnet;
-#endif
 }
 
 void Light::set_params(int* params) {
