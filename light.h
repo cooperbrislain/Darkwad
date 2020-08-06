@@ -11,7 +11,8 @@ class Light {
             _num_leds { 0 },
             _name { "light" },
             _prog { &Light::_prog_solid },
-            _count { 0 }
+            _count { 0 },
+            _params { 1, 0, 0, 0 }
         { };
         Light(String name, CRGB* leds, int offset, int num_leds, int inverse=0) :
             _name { name },
@@ -21,7 +22,8 @@ class Light {
             _count { 0 },
             _speed { 1 },
             _offset { offset },
-            _prog { &Light::_prog_solid }
+            _prog { &Light::_prog_solid },
+            _params { 1, 0, 0, 0 }
         {
             _leds = new CRGB*[num_leds];
             for (int i=0; i<num_leds; i++) {
@@ -35,7 +37,8 @@ class Light {
             _offset { 0 },
             _onoff { 0 },
             _num_leds { sizeof(leds) },
-            _prog { &Light::_prog_solid }
+            _prog { &Light::_prog_solid },
+            _params { 1, 0, 0, 0 }
         {
             _leds = new CRGB*[_num_leds];
             for (int i=0; i<sizeof(leds); i++) {

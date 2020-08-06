@@ -31,21 +31,21 @@ void setup() {
 //        lights[3] = Light("right", &leds[1], 50, 25); // RIGHT
 //        lights[4] = Light("rear", &leds[1], 75, 25); // REAR
 
-//  Test Bar Mapping
-    lights[2] = Light("left", &leds[1], 0, 5, 1);
     lights[1] = Light("front", &leds[1], 7, 11);
+    lights[2] = Light("left", &leds[1], 0, 5, 1);
     lights[3] = Light("right", &leds[1], 20, 5);
     CRGB* rearLeds[4] = { &leds[6], &leds[7], &leds[19], &leds[20] };
     lights[4] = Light("rear", rearLeds);
 
-    lights[2].set_rgb(CRGB::Orange);
-    lights[3].set_rgb(CRGB::Orange);
-    lights[4].set_rgb(CRGB::Red);
-    lights[0].set_param(0,1);
-    lights[1].set_param(0,1);
-    lights[2].set_param(0,1);
-    lights[3].set_param(0,1);
-    lights[4].set_param(0,1);
+//  Test Bar Mapping
+    Light* FrontLight = &lights[1];
+
+    Light* LeftLight = &lights[2];
+    LeftLight->set_rgb(CRGB::Orange);
+    Light* RightLight = &lights[3];
+    RightLight->set_rgb(CRGB::Orange);
+    Light* RearLight = &lights[4];
+    RearLight->set_rgb(CRGB::Red);
 
     for (Light light : lights) {
         light.blink();
