@@ -1,7 +1,7 @@
 #ifndef DARKWAD_CONFIG_H
 #define DARKWAD_CONFIG_H
 
-//#define DEBUG
+#define DEBUG
 
 #define DEVICE_NAME "darkwad"
 #define MQTT_CLID "darkwad"
@@ -23,6 +23,10 @@
 
 #define CONTROLS
 #define NUM_CONTROLS 4
-#define TOUCH_THRESHOLD 1
+#define TOUCH_PIN T0
+#define ANALOG_PIN 4
+#define DIGITAL_PIN 12
+#define CTL_TOUCH_THRESHOLD 20
+#define CTL_SAMPLE_RATE 5
 
 #endif // DARKWAD_CONFIG_H

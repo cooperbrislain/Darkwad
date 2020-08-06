@@ -1,19 +1,11 @@
-#include "Arduino.h"
 #include "control.h"
-#include "config.h"
-
-#define DEBUG
-
-template<class T>
-    inline Print &operator <<(Print &stream, T arg)
-    { stream.print(arg); return stream; }
 
 void Control::update() {
     int val = this->read();
     #ifdef DEBUG
-        Serial.println();
+        Serial << _name << '[' << _type << '(' << _pin << ")]:" << val << '[' << _pressed << ']' << '\n';
     #endif
-    if (val >= _threshold) {
+    if ((_type == CTL_TOUCH && val <= _threshold) || (_type == CTL_DIGITAL && val == 1)) {
         _pressed++;
         if (_pressed == 10) _pressFn(val);
         if (_pressed > 20) _stilldownFn(val);
@@ -26,10 +18,10 @@ void Control::update() {
 int Control::read() {
     switch (_type) {
         case CTL_TOUCH:
-            return touchRead(_pin);
+            return touchRead(_pin) <= _threshold? 1 : 0;
         default:
         case CTL_DIGITAL:
-            return digitalRead(_pin);
+            return digitalRead(_pin) == HIGH? 1 : 0;
         case CTL_ANALOG:
             return analogRead(_pin);
     }
@@ -51,20 +43,16 @@ void Control::set_stilldown(ControlFn stilldownFn) {
     _stilldownFn = stilldownFn;
 }
 
-std::ostream& operator<< (std::ostream& os, const Control &ctl)
+std::ostream& operator<< (std::ostream& os, const Control::ControlType ctlType)
 {
-    switch(ctl._type)
+    switch(ctlType)
     {
         case Control::CTL_ANALOG:
-            os << 'A' << ctl._pin << ": " << ctl._val;
-            break;
+            return os << 'A';
         default:
         case Control::CTL_DIGITAL:
-            os << 'D' << ctl._pin << ": " << ctl._val;
-            break;
+            return os << 'D';
         case Control::CTL_TOUCH:
-            os << 'T' << ctl._pin << ": " << ctl._val;
-            break;
+            return os << 'T';
     }
-    return os;
 }

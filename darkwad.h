@@ -6,28 +6,12 @@
 #include <string.h>
 #include <SPI.h>
 #include <FastLED.h>
-#include <ArduinoJson.h>
+#include <iostream>
 
 #include "config.h"
 
 #include "light.h"
 #include "control.h"
-
-//#include "esp_wifi.h"
-//#include "esp_log.h"
-//#include "esp_event.h"
-//#include "nvs_flash.h"
-
-#ifdef TOUCH
-    #define TOUCH_PIN T0
-    #ifndef TOUCH_THRESHOLD
-        #define TOUCH_THRESHOLD 50
-    #endif
-#endif
-
-#ifndef BRIGHTNESS_SCALE
-    #define BRIGHTNESS_SCALE 50
-#endif
 
 #define halt(s) { Serial.println(F( s )); while(1);  }
 

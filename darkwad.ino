@@ -49,6 +49,10 @@ void setup() {
 
     Serial.println("Light Mapping Initialized");
 
+    pinMode(T8, INPUT);
+    pinMode(T9, INPUT);
+    pinMode(14, INPUT);
+
     #ifdef CONTROLS
         controls[0] = Control("left", T8, Control::CTL_DIGITAL,
                 [](int val) {
@@ -56,7 +60,7 @@ void setup() {
                     lights[2].set_param(0,25);
                     lights[2].set_param(1,50);
                     lights[2].set_on(1); },
-                [](int val) { Serial.println("LEFT"); },
+                [](int val) { Serial << "LEFT" << '\n'; },
                 [](int val) { lights[2].set_on(0); }
             );
             controls[1] = Control("right", T9, Control::CTL_DIGITAL,
@@ -66,19 +70,19 @@ void setup() {
                     lights[3].set_param(1,50);
                     lights[3].set_on(1);
                     },
-                [](int val) { Serial.println("RIGHT"); },
+                [](int val) { Serial << "RIGHT" << '\n'; },
                 [](int val) {
                     lights[3].set_on(0);
                 }
             );
-            controls[2] = Control("Green", T5, Control::CTL_TOUCH,
+            controls[2] = Control("button", 12, Control::CTL_TOUCH,
                 [](int val) { lights[1].turn_on(); },
-                [](int val) { Serial.println("GREEN"); },
+                [](int val) { Serial << "BUTTON" << '\n'; },
                 [](int val) { lights[1].set_on(0); }
             );
-            controls[3] = Control("Red", T3, Control::CTL_DIGITAL,
+            controls[3] = Control("brake", 14, Control::CTL_DIGITAL,
                 [](int val) { lights[4].turn_on(); },
-                [](int val) { Serial.println("RED"); },
+                [](int val) { Serial << "BRAKE" << '\n'; },
                 [](int val) { lights[4].set_on(0); }
             );
 //            controls[4] = AnalogControl("X", T0);
@@ -92,7 +96,9 @@ void setup() {
 // MAIN LOOP
 
 void loop() {
-    for (int i=0; i<NUM_CONTROLS; i++) controls[i].update();
+    for (int i=0; i<NUM_CONTROLS; i++)
+        if (count%controls[i]._sampleRate == 0)
+            controls[i].update();
     for (int i=0; i<NUM_LIGHTS; i++)
         if (count%lights[i].get_param(0) == 0)
             lights[i].update();
