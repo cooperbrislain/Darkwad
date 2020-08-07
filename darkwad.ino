@@ -1,4 +1,8 @@
 #include "darkwad.h"
+#define LED_FRONT lights[1]
+#define LED_REAR lights[4]
+#define LED_LEFT lights[2]
+#define LED_RIGHT lights[3]
 
 CRGB leds[NUM_LEDS];
 Light lights[NUM_LIGHTS];
@@ -38,17 +42,14 @@ void setup() {
     lights[4] = Light("rear", rearLeds);
 
 //  Test Bar Mapping
-    Light* FrontLight = &lights[1];
 
-    Light* LeftLight = &lights[2];
-    LeftLight->set_rgb(CRGB::Orange);
-    Light* RightLight = &lights[3];
-    RightLight->set_rgb(CRGB::Orange);
-    Light* RearLight = &lights[4];
-    RearLight->set_rgb(CRGB::Red);
+    LED_LEFT.set_rgb(CRGB::Orange);
+    LED_RIGHT.set_rgb(CRGB::Orange);
+    LED_REAR.set_rgb(CRGB::Red);
 
-    for (Light light : lights) {
-        light.blink();
+    for (int i=0; i<NUM_LIGHTS; i++) {
+        lights[i].turn_off();
+        delay(100);
     }
 
     Serial << "It's lit fam!";
@@ -57,63 +58,73 @@ void setup() {
     pinMode(T9, INPUT);
     pinMode(14, INPUT);
 
-    #ifdef CONTROLS
-        controls[0] = Control("left", T8, Control::CTL_DIGITAL,
-                [](int val) {
-                    lights[1].set_program("chase");
-                    lights[1].set_param(0,25);
-                    lights[1].set_param(1,50);
-                    lights[1].set_on(1); },
-                [](int val) { Serial << "LEFT" << '\n'; },
-                [](int val) { lights[1].set_on(0); }
-            );
-            controls[1] = Control("right", T9, Control::CTL_DIGITAL,
-                [](int val) {
-                    lights[3].set_program("chase");
-                    lights[3].set_param(0,25);
-                    lights[3].set_param(1,50);
-                    lights[3].set_on(1);
-                    },
-                [](int val) { Serial << "RIGHT" << '\n'; },
-                [](int val) {
-                    lights[3].set_on(0);
-                }
-            );
-            controls[2] = Control("button", 12, Control::CTL_TOUCH,
-                [](int val) { lights[2].turn_on(); },
-                [](int val) { Serial << "BUTTON" << '\n'; },
-                [](int val) { lights[2].set_on(0); }
-            );
-            controls[3] = Control("brake", 14, Control::CTL_DIGITAL,
-                [](int val) { lights[4].turn_on(); },
-                [](int val) { Serial << "BRAKE" << '\n'; },
-                [](int val) { lights[4].set_on(0); }
-            );
+    controls[0] = Control("left", T8, Control::CTL_DIGITAL,
+        [](int val) {
+            LED_LEFT.set_program("chase");
+            LED_LEFT.set_param(0,25);
+            LED_LEFT.set_param(1,50);
+            LED_LEFT.turn_on();
+        },
+        [](int val) { Serial << "LEFT" << '\n'; },
+        [](int val) { LED_LEFT.turn_off(); }
+    );
+    controls[1] = Control("right", T9, Control::CTL_DIGITAL,
+        [](int val) {
+            LED_RIGHT.set_program("chase");
+            LED_RIGHT.set_param(0,25);
+            LED_RIGHT.set_param(1,50);
+            LED_RIGHT.turn_on();
+        },
+        [](int val) { Serial << "RIGHT" << '\n'; },
+        [](int val) { LED_RIGHT.turn_off(); }
+    );
+    controls[2] = Control("button", 12, Control::CTL_TOUCH,
+        [](int val) {  },
+        [](int val) {
+            Serial << "BUTTON" << '\n';
+            LED_FRONT.turn_on();
+        },
+        [](int val) {
+            LED_FRONT.turn_off();
+            LED_LEFT.turn_off();
+            LED_RIGHT.turn_off();
+        }
+    );
+    controls[3] = Control("brake1", 14, Control::CTL_DIGITAL,
+        [](int val) { LED_REAR.turn_on(); },
+        [](int val) { Serial << "BRAKE 1" << '\n'; },
+        [](int val) { LED_REAR.turn_off(); }
+    );
+//            controls[4] = Control("brake2", 27, Control::CTL_DIGITAL,
+//                [](int val) { },
+//                [](int val) { Serial << "BRAKE 2" << '\n'; },
+//                [](int val) { }
+//            );
 //            controls[4] = AnalogControl("X", T0);
 //            controls[5] = AnalogControl("Y", T1);
 //            controls[6] = ButtonControl("Z", T2);
-    #endif // CONTROLS
 
     blackout();
-
     delay(150);
 }
 
 // MAIN LOOP
 
 void loop() {
+
     for (int i=0; i<NUM_CONTROLS; i++)
         if (count%controls[i]._sampleRate == 0)
             controls[i].update();
     for (int i=0; i<NUM_LIGHTS; i++)
         if (count%lights[i].get_param(0) == 0)
             lights[i].update();
+
     FastLED.show();
     count++;
+    delay(1000/speed);
     #ifdef SLOW
         delay(SLOW);
     #endif
-    delay(1000/speed);
 }
 
 // LED FUNCTIONS
