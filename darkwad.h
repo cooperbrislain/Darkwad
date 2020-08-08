@@ -10,8 +10,8 @@
 
 #include "config.h"
 
-#include "light.h"
-#include "control.h"
+#include "Light.h"
+#include "Control.h"
 
 #define halt(s) { Serial.println(F( s )); while(1);  }
 

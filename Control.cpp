@@ -1,4 +1,4 @@
-#include "control.h"
+#include "Control.h"
 
 void Control::update() {
     int val = this->read();

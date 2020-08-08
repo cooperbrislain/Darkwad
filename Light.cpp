@@ -1,4 +1,4 @@
-#include "light.h"
+#include "Light.h"
 
 void Light::update() {
     (this->*_prog)(_params[1]);
