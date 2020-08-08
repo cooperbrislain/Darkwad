@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <SPI.h>
+#include <SPIFFS.h>
 #include <FastLED.h>
 #include <iostream>
 

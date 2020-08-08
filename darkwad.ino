@@ -16,6 +16,11 @@ void setup() {
 
     Serial << "Darkwad Lighting Up";
 
+    SPIFFS.begin(true);
+    File file = SPIFFS.open("/test.txt", FILE_WRITE);
+    file << "Test";
+    file.close();
+
     delay(10);
 
     FastLED.setBrightness(BRIGHTNESS_SCALE);
@@ -111,6 +116,11 @@ void setup() {
 // MAIN LOOP
 
 void loop() {
+    File file = SPIFFS.open("/test.txt");
+    while(file.available()) {
+        Serial << file.read();
+    }
+    file.close();
 
     for (int i=0; i<NUM_CONTROLS; i++)
         if (count%controls[i]._sampleRate == 0)
