@@ -1,47 +1,26 @@
 #include "Control.h"
 
+// getters
 
-int Control::read() {
-    int val;
-    switch (_type) {
-        case CTL_TOUCH:
-            val = touchRead(_pin);
-            return (val <= _threshold)? 1 : 0;
-        default:
-        case CTL_DIGITAL:
-            val = digitalRead(_pin);
-            return (val == HIGH)? 1 : 0;
+String Control::getName() { return _name; }
+ControlType Control::getType() { return _type; }
+int Control::getSampleRate() { return _sampleRate; }
+
+// setters
+
+void Control::setName(String name) { _name = name; }
+void Control::setSampleRate(int sampleRate) { _sampleRate = sampleRate; }
+
+// functions
+
+std::ostream& operator<< (std::ostream& os, const ControlType ctlType) {
+    switch(ctlType) {
         case CTL_ANALOG:
-            return analogRead(_pin);
-    }
-}
-
-bool Control::is_pressed() {
-    return _pressed!=0;
-}
-
-void Control::set_press(ControlFn pressFn) {
-    _pressFn = pressFn;
-}
-
-void Control::set_release(ControlFn releaseFn) {
-    _releaseFn = releaseFn;
-}
-
-void Control::set_stilldown(ControlFn stilldownFn) {
-    _stilldownFn = stilldownFn;
-}
-
-std::ostream& operator<< (std::ostream& os, const Control::ControlType ctlType)
-{
-    switch(ctlType)
-    {
-        case Control::CTL_ANALOG:
             return os << 'A';
         default:
-        case Control::CTL_DIGITAL:
+        case CTL_DIGITAL:
             return os << 'D';
-        case Control::CTL_TOUCH:
+        case CTL_TOUCH:
             return os << 'T';
     }
 }

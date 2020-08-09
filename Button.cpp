@@ -1,5 +1,27 @@
-//
-// Created by Cooper Brislain on 8/8/20.
-//
-
 #include "Button.h"
+
+int Button::getState() {
+    return _state;
+}
+
+void Button::setPress(ControlFn pressFn) {
+    _pressFn = pressFn;
+}
+
+void Button::setStilldown(ControlFn stilldownFn) {
+    _stilldownFn = stilldownFn;
+}
+
+void Button::setRelease(ControlFn releaseFn) {
+    _releaseFn = releaseFn;
+}
+
+int Button::getState() {
+    int val = digitalRead(_pin);
+    return (val == HIGH)? 1 : 0;
+}
+
+void Button::update() {
+    return;
+}
+

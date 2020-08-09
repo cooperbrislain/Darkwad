@@ -6,7 +6,7 @@
 
 CRGB leds[NUM_LEDS];
 Light lights[NUM_LIGHTS];
-Control controls[NUM_CONTROLS];
+Control* controls[NUM_CONTROLS];
 
 int speed = GLOBAL_SPEED;
 int count = 0;
@@ -63,7 +63,7 @@ void setup() {
     pinMode(T9, INPUT);
     pinMode(14, INPUT);
 
-    controls[0] = Control("left", T8, Control::CTL_DIGITAL,
+    Button leftSwitch = Button("left", T8
         [](int val) {
             LED_LEFT.set_program("chase");
             LED_LEFT.set_param(0,25);
@@ -73,7 +73,7 @@ void setup() {
         [](int val) { Serial << "LEFT" << '\n'; },
         [](int val) { LED_LEFT.turn_off(); }
     );
-    controls[1] = Control("right", T9, Control::CTL_DIGITAL,
+    Button rightSwitch = Button("right", T9,
         [](int val) {
             LED_RIGHT.set_program("chase");
             LED_RIGHT.set_param(0,25);
@@ -83,7 +83,7 @@ void setup() {
         [](int val) { Serial << "RIGHT" << '\n'; },
         [](int val) { LED_RIGHT.turn_off(); }
     );
-    controls[2] = Control("button", 12, Control::CTL_TOUCH,
+    Button gripButton = Control("button", 12
         [](int val) {  },
         [](int val) {
             Serial << "BUTTON" << '\n';
@@ -95,20 +95,13 @@ void setup() {
             LED_RIGHT.turn_off();
         }
     );
-    controls[3] = Control("brake1", 14, Control::CTL_DIGITAL,
+    Button brake1 = Control("brake", 14,
         [](int val) { LED_REAR.turn_on(); },
         [](int val) { Serial << "BRAKE 1" << '\n'; },
         [](int val) { LED_REAR.turn_off(); }
     );
-//            controls[4] = Control("brake2", 27, Control::CTL_DIGITAL,
-//                [](int val) { },
-//                [](int val) { Serial << "BRAKE 2" << '\n'; },
-//                [](int val) { }
-//            );
-//            controls[4] = AnalogControl("X", T0);
-//            controls[5] = AnalogControl("Y", T1);
-//            controls[6] = ButtonControl("Z", T2);
 
+    controls = { *leftSwitch, *rightSwitch, *gripButton, *brake1 };
     blackout();
     delay(150);
 }
@@ -123,8 +116,8 @@ void loop() {
     file.close();
 
     for (int i=0; i<NUM_CONTROLS; i++)
-        if (count%controls[i]._sampleRate == 0)
-            controls[i].update();
+        if (count%controls[i].getSampleRate() == 0)
+            controls[i]->update();
     for (int i=0; i<NUM_LIGHTS; i++)
         if (count%lights[i].get_param(0) == 0)
             lights[i].update();
