@@ -1,3 +1,6 @@
+#ifndef CONTROL_H
+#define CONTROL_H
+
 #include <Arduino.h>
 #include <iostream>
 #include "config.h"
@@ -17,6 +20,16 @@ class Control {
         int         _sampleRate;
         friend std::ostream& operator<< (std::ostream& os, ControlType &ctlType);
     public:
+        Control() :
+            _name { "Control" },
+            _type { CTL_DIGITAL },
+            _sampleRate { DEFAULT_CTL_SAMPLE_RATE }
+        { };
+        Control(String name, ControlType type, int sampleRate) :
+            _name { name },
+            _type { type },
+            _sampleRate { sampleRate }
+        { };
         String          getName();
         ControlType     getType();
         virtual int     getState() = 0;
@@ -25,3 +38,5 @@ class Control {
         void            setSampleRate(int sampleRate);
         virtual void    update() = 0;
 };
+
+#endif // CONTROL_H

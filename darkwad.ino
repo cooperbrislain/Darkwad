@@ -16,10 +16,10 @@ void setup() {
 
     Serial << "Darkwad Lighting Up";
 
-    SPIFFS.begin(true);
-    File file = SPIFFS.open("/test.txt", FILE_WRITE);
-    file << "Test";
-    file.close();
+//    SPIFFS.begin(true);
+//    File file = SPIFFS.open("/test.txt", FILE_WRITE);
+//    file << "Test";
+//    file.close();
 
     delay(10);
 
@@ -62,17 +62,21 @@ void setup() {
     pinMode(T8, INPUT);
     pinMode(T9, INPUT);
     pinMode(14, INPUT);
+    pinMode(12, INPUT);
 
-    Button leftSwitch = Button("left", T8
+    Serial << "Initializing Controls\n";
+
+    Button leftSwitch = Button("left", T8,
         [](int val) {
+            LED_LEFT.turn_on();
             LED_LEFT.set_program("chase");
             LED_LEFT.set_param(0,25);
             LED_LEFT.set_param(1,50);
-            LED_LEFT.turn_on();
         },
-        [](int val) { Serial << "LEFT" << '\n'; },
+        [](int val) { Serial << "LEFT\n"; },
         [](int val) { LED_LEFT.turn_off(); }
     );
+    Serial << "left ";
     Button rightSwitch = Button("right", T9,
         [](int val) {
             LED_RIGHT.set_program("chase");
@@ -80,13 +84,14 @@ void setup() {
             LED_RIGHT.set_param(1,50);
             LED_RIGHT.turn_on();
         },
-        [](int val) { Serial << "RIGHT" << '\n'; },
+        [](int val) { Serial << "RIGHT\n"; },
         [](int val) { LED_RIGHT.turn_off(); }
     );
-    Button gripButton = Control("button", 12
+    Serial << "right ";
+    Button gripButton = Button("button", 12,
         [](int val) {  },
         [](int val) {
-            Serial << "BUTTON" << '\n';
+            Serial << "BUTTON\n";
             LED_FRONT.turn_on();
         },
         [](int val) {
@@ -95,13 +100,22 @@ void setup() {
             LED_RIGHT.turn_off();
         }
     );
-    Button brake1 = Control("brake", 14,
+    Serial << "button ";
+    BrakeControl brake1 = BrakeControl("brake", 14, 15,
         [](int val) { LED_REAR.turn_on(); },
-        [](int val) { Serial << "BRAKE 1" << '\n'; },
+        [](int val) { Serial << "BRAKE 1\n"; },
         [](int val) { LED_REAR.turn_off(); }
     );
+    Serial << "brake ";
 
-    controls = { *leftSwitch, *rightSwitch, *gripButton, *brake1 };
+
+    controls[0] = &leftSwitch;
+    controls[1] = &rightSwitch;
+    controls[2] = &gripButton;
+    controls[3] = &brake1;
+
+    Serial << "Controls Initialized\n";
+
     blackout();
     delay(150);
 }
@@ -109,14 +123,16 @@ void setup() {
 // MAIN LOOP
 
 void loop() {
-    File file = SPIFFS.open("/test.txt");
-    while(file.available()) {
-        Serial << file.read();
-    }
-    file.close();
+//    File file = SPIFFS.open("/test.txt");
+//    while(file.available()) {
+//        Serial << file.read();
+//    }
+//    file.close();
+
+    Serial << "loop";
 
     for (int i=0; i<NUM_CONTROLS; i++)
-        if (count%controls[i].getSampleRate() == 0)
+        if (count%controls[i]->getSampleRate() == 0)
             controls[i]->update();
     for (int i=0; i<NUM_LIGHTS; i++)
         if (count%lights[i].get_param(0) == 0)

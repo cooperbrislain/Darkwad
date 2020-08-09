@@ -1,9 +1,5 @@
 #include "Button.h"
 
-int Button::getState() {
-    return _state;
-}
-
 void Button::setPress(ControlFn pressFn) {
     _pressFn = pressFn;
 }

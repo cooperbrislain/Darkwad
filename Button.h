@@ -11,28 +11,26 @@ class Button: public Control {
     public:
 
         Button() :
-            _name           { "Button" },
-            _type           { CTL_DIGITAL },
-            _pin            { DEFAULT_CTL_PIN },
-            _sampleRate     { DEFAULT_CTL_SAMPLE_RATE }
-            _pressFn        { [](int val){ } },
-            _stilldownFn    { [](int val){ } },
-            _releaseFn      { [](int val){ } }
+            Control { "Button", CTL_DIGITAL, DEFAULT_CTL_SAMPLE_RATE },
+            _pin    { DEFAULT_CTL_PIN }
         { };
         Button(String name, int pin, ControlFn pressFn, ControlFn stilldownFn, ControlFn releaseFn) :
-            _name           { name },
-            _type           { CTL_DIGITAL },
+            Control         { name, CTL_DIGITAL, DEFAULT_CTL_SAMPLE_RATE },
             _pin            { pin },
             _pressFn        { pressFn },
             _stilldownFn    { stilldownFn },
-            _releaseFn      { releaseFn },
-            _sampleRate     { CTL_SAMPLE_RATE }
+            _releaseFn      { releaseFn }
+        { };
+        Button(String name, int pin) :
+            Control         { name, CTL_DIGITAL, DEFAULT_CTL_SAMPLE_RATE },
+            _pin            { pin }
         { };
 
         int  getState();
         void update();
 
-        void setPress(ControlFn pressFn) : _pressFn { pressFn };
-        void setRelease(ControlFn releaseFn) : _releaseFn { releaseFn };
-        void setStilldown(ControlFn stilldownFn) : _stilldownFn { stilldownFn };
+        void setPress(ControlFn pressFn);
+        void setRelease(ControlFn releaseFn);
+        void setStilldown(ControlFn stilldownFn);
+
 };
