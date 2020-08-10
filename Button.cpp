@@ -18,6 +18,24 @@ int Button::getState() {
 }
 
 void Button::update() {
+    int state = this->getState();
+    if (_state != state) {
+        if (++_count>=SAMPLES) {
+            if (_state == 0 && state == 1) {
+                this->_pressFn(1);
+            }
+            if (_state == 1 && state == 0) {
+                this->_releaseFn(1);
+            }
+            _state = state;
+            _count = 0;
+        }
+    } else {
+        _count = 0;
+        if (_state == 1) {
+            this->_stilldownFn(1);
+        }
+    }
     return;
 }
 

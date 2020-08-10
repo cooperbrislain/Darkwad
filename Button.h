@@ -1,9 +1,14 @@
 #include "Control.h"
 
+#define SAMPLES 3
+
 class Button: public Control {
     private:
 
+        int _state;
         int _pin;
+        int _pressed;
+        int _count;
         ControlFn _pressFn;
         ControlFn _releaseFn;
         ControlFn _stilldownFn;
@@ -12,7 +17,10 @@ class Button: public Control {
 
         Button() :
             Control { "Button", CTL_DIGITAL, DEFAULT_CTL_SAMPLE_RATE },
-            _pin    { DEFAULT_CTL_PIN }
+            _pin    { DEFAULT_CTL_PIN },
+            _pressFn        { NULF },
+            _stilldownFn    { NULF },
+            _releaseFn      { NULF }
         { };
         Button(String name, int pin, ControlFn pressFn, ControlFn stilldownFn, ControlFn releaseFn) :
             Control         { name, CTL_DIGITAL, DEFAULT_CTL_SAMPLE_RATE },
@@ -23,7 +31,10 @@ class Button: public Control {
         { };
         Button(String name, int pin) :
             Control         { name, CTL_DIGITAL, DEFAULT_CTL_SAMPLE_RATE },
-            _pin            { pin }
+            _pin            { pin },
+            _pressFn        { NULF },
+            _stilldownFn    { NULF },
+            _releaseFn      { NULF }
         { };
 
         int  getState();

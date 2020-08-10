@@ -11,6 +11,8 @@
 typedef void(*ControlFn)(int);
 enum ControlType { CTL_DIGITAL, CTL_ANALOG, CTL_TOUCH };
 
+#define NULF [](int arg) { }
+
 template<class T> inline Print &operator <<(Print &stream, T arg) { stream.print(arg); return stream; }
 
 class Control {
