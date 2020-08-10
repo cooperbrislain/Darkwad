@@ -6,6 +6,7 @@
 #include <string.h>
 #include <SPI.h>
 #include <SPIFFS.h>
+#include <ArduinoJson.h>
 #include <FastLED.h>
 #include <iostream>
 

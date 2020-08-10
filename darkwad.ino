@@ -7,6 +7,7 @@
 CRGB leds[NUM_LEDS];
 Light lights[NUM_LIGHTS];
 Control* controls[NUM_CONTROLS];
+StaticJsonDocument<512> config;
 
 BrakeControl brake1;
 Button gripButton, leftSwitch, rightSwitch;
@@ -17,13 +18,15 @@ int count = 0;
 void setup() {
     Serial.begin(115200);
 
-    Serial << "Darkwad Lighting Up";
+    Serial << "Loading configuration...\n";
+    SPIFFS.begin(true);
+    File configFile = SPIFFS.open("/config.json", FILE_READ);
+    deserializeJson(config, configFile);
+    String bikeName = config["bikeName"];
+    Serial << "Bike: " << bikeName << '\n';
+    configFile.close();
 
-//    SPIFFS.begin(true);
-//    File file = SPIFFS.open("/test.txt", FILE_WRITE);
-//    file << "Test";
-//    file.close();
-
+    Serial << "Darkwad Lighting Up...\n";
     delay(10);
 
     FastLED.setBrightness(BRIGHTNESS_SCALE);
@@ -31,7 +34,7 @@ void setup() {
 
     blink();
 
-    Serial << "LEDs initialized";
+    Serial << "LEDs initialized\n";
 
     #ifdef BUMP_LED
         lights[0] = Light("bump", &leds[0], 0, 1);
@@ -60,7 +63,7 @@ void setup() {
         delay(100);
     }
 
-    Serial << "It's lit fam!";
+    Serial << "It's lit fam!\n";
 
     pinMode(T8, INPUT);
     pinMode(T9, INPUT);
