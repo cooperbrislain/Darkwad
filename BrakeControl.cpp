@@ -5,5 +5,7 @@ void BrakeControl::update() {
 }
 
 int BrakeControl::getState() {
-    return (digitalRead(_pin1) == HIGH? 1:0) + (digitalRead(_pin2) == HIGH? 1:0);
+    int count = 0;
+    for (int pin : _pins) count += digitalRead(pin) == HIGH? 1 : 0;
+    return count;
 }
