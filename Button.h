@@ -2,6 +2,8 @@
 
 #define SAMPLES 3
 
+#define DEFAULT_CTL_PIN 4
+
 class Button: public Control {
     private:
 

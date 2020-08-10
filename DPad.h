@@ -15,12 +15,12 @@ private:
 public:
 
     DPad() :
-            Control { "DPad", CTL_DIGITAL, DEFAULT_SAMPLE_RATE },
-            _pins   { DEFAULT_PINS }
+        Control { "DPad", CTL_DIGITAL, DEFAULT_SAMPLE_RATE },
+        _pins   { DEFAULT_PINS }
     { };
     DPad(String name, int* pins) :
-    Control { name, CTL_DIGITAL, DEFAULT_SAMPLE_RATE },
-    _pins   { pins }
+        Control { name, CTL_DIGITAL, DEFAULT_SAMPLE_RATE },
+        _pins   { pins }
     { };
 
     int  getState();

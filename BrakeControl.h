@@ -5,7 +5,7 @@ class BrakeControl: public Control {
     private:
 
         enum States { OFF, SLOW, STOP };
-        int _pins[2];
+        int* _pins[2];
 
     public:
 
@@ -21,10 +21,7 @@ class BrakeControl: public Control {
             ControlFn stilldownFn,
             ControlFn releaseFn) :
             Control         { name, CTL_DIGITAL, 25},
-            _pins           { pins },
-            _pressFn        { pressFn },
-            _stilldownFn    { stilldownFn },
-            _releaseFn      { releaseFn }
+            _pins           { pins }
         { };
 
         int  getState();

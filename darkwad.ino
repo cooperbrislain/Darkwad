@@ -53,8 +53,8 @@ void setup() {
 
     if (obj.containsKey("lights")) {
         JsonArray jsonLights = obj["lights"];
-        for (JsonVariant light : jsonLights) {
-            Serial << light.name << '\n';
+        for (JsonObject light : jsonLights) {
+            Serial << light.name;
         }
     }
 
@@ -78,7 +78,7 @@ void setup() {
 
     if (obj.containsKey("controls")) {
         JsonArray jsonControls = obj["controls"];
-        for (JsonVariant control : jsonControls) {
+        for (JsonObject control : jsonControls) {
             Serial << control.name << '\n';
         }
     }
