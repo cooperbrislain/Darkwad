@@ -49,10 +49,12 @@ void setup() {
     config.bump_led     = jsonDoc["bump_led"] | 0;
     config.num_controls = jsonDoc["num_controls"] | 0;
 
+    Serial << "Loading Lights\n";
+
     if (obj.containsKey("lights")) {
         JsonArray jsonLights = obj["lights"];
         for (JsonVariant light : jsonLights) {
-            Serial << light.as<char*>() << '\n';
+            Serial << light.name << '\n';
         }
     }
 
@@ -70,77 +72,16 @@ void setup() {
         lights[0] = Light("bump", &leds[0], 0, 1);
     #endif
 
-//  Bike Mapping
-//        lights[1] = Light("front", &leds[1], 0, 25); // FRONT
-//        lights[2] = Light("left", &leds[1], 25, 25, 1); // LEFT
-//        lights[3] = Light("right", &leds[1], 50, 25); // RIGHT
-//        lights[4] = Light("rear", &leds[1], 75, 25); // REAR
-
-    lights[1] = Light("front", &leds[1], 7, 11);
-    lights[2] = Light("left", &leds[1], 0, 5, 1);
-    lights[3] = Light("right", &leds[1], 20, 5);
-    CRGB* rearLeds[4] = { &leds[6], &leds[7], &leds[19], &leds[20] };
-    lights[4] = Light("rear", rearLeds);
-
-//  Test Bar Mapping
-
-    LED_LEFT.set_rgb(CRGB::Orange);
-    LED_RIGHT.set_rgb(CRGB::Orange);
-    LED_REAR.set_rgb(CRGB::Red);
-
-    for (int i=0; i<NUM_LIGHTS; i++) {
-        lights[i].turn_off();
-        delay(100);
-    }
-
     Serial << "It's lit fam!\n";
-
-    pinMode(T8, INPUT);
-    pinMode(T9, INPUT);
-    pinMode(14, INPUT);
-    pinMode(12, INPUT);
 
     Serial << "Initializing Controls\n";
 
-    leftSwitch = Button("left", T8,
-        [](int val) {
-            LED_LEFT.turn_on();
-            LED_LEFT.set_program("chase");
-            LED_LEFT.set_param(0,25);
-            LED_LEFT.set_param(1,50);
-        },
-        [](int val) { Serial << "LEFT\n"; },
-        [](int val) { LED_LEFT.turn_off(); }
-    );
-    rightSwitch = Button("right", T9,
-        [](int val) {
-            LED_RIGHT.set_program("chase");
-            LED_RIGHT.set_param(0,25);
-            LED_RIGHT.set_param(1,50);
-            LED_RIGHT.turn_on();
-        },
-        [](int val) { Serial << "RIGHT\n"; },
-        [](int val) { LED_RIGHT.turn_off(); }
-    );
-    gripButton = Button("button", 12,
-        [](int val) { LED_FRONT.turn_on(); },
-        [](int val) { Serial << "BUTTON\n"; },
-        [](int val) {
-            LED_FRONT.turn_off();
-            LED_LEFT.turn_off();
-            LED_RIGHT.turn_off();
+    if (obj.containsKey("controls")) {
+        JsonArray jsonControls = obj["controls"];
+        for (JsonVariant control : jsonControls) {
+            Serial << control.name << '\n';
         }
-    );
-    brake1 = BrakeControl("brake", 14, 15,
-        [](int val) { LED_REAR.turn_on(); },
-        [](int val) { Serial << "BRAKE 1\n"; },
-        [](int val) { LED_REAR.turn_off(); }
-    );
-
-    controls[0] = &leftSwitch;
-    controls[1] = &rightSwitch;
-    controls[2] = &gripButton;
-    controls[3] = &brake1;
+    }
 
     Serial << "Controls Initialized...\n";
 

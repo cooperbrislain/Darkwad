@@ -1,7 +1,37 @@
 {
   "bikeName": "Darkwad",
   "lights": [
-    { "name": "test" },
-    { "name": "foo" }
+    {
+      "name": "front",
+      "led_offset": 7,
+      "led_count": 11
+    },
+    {
+      "name": "left",
+      "led_offset": 0,
+      "led_count": 5,
+      "reverse": 1
+    },
+    {
+      "name": "right",
+      "led_offset": 20,
+      "led_count": 5
+    },
+    {
+      "name": "rear",
+      "leds": [6, 7, 19, 20]
+    }
+  ],
+  "controls": [
+    {
+      "name": "Button",
+      "type": "Button",
+      "pin":  12
+    },
+    {
+      "name": "DHat",
+      "type": "DPad",
+      "pins": [4, 0, 2, 15]
+    }
   ]
 }
