@@ -3,12 +3,9 @@
 
 //#define DEBUG
 
-#define DEVICE_NAME "darkwad"
-#define MQTT_CLID "darkwad"
-
 #define IS_ESP32
-
 #define IS_APA102
+
 #define DATA_PIN 21
 #define CLOCK_PIN 22
 

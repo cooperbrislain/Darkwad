@@ -7,7 +7,6 @@
 CRGB leds[NUM_LEDS];
 Light lights[NUM_LIGHTS];
 Control* controls[NUM_CONTROLS];
-StaticJsonDocument<512> config;
 
 BrakeControl brake1;
 Button gripButton, leftSwitch, rightSwitch;
@@ -15,18 +14,49 @@ Button gripButton, leftSwitch, rightSwitch;
 int speed = GLOBAL_SPEED;
 int count = 0;
 
+struct Config {
+    String bikeName;
+    int    speed;
+    int    fade;
+    int    brightness;
+    int    num_leds;
+    int    num_lights;
+    int    num_params;
+    int    bump_led;
+    int    num_controls;
+};
+
+Config config;
+
 void setup() {
     Serial.begin(115200);
 
     Serial << "Loading configuration...\n";
     SPIFFS.begin(true);
+    StaticJsonDocument<1024> jsonDoc;
     File configFile = SPIFFS.open("/config.json", FILE_READ);
-    deserializeJson(config, configFile);
-    String bikeName = config["bikeName"];
-    Serial << "Bike: " << bikeName << '\n';
+    deserializeJson(jsonDoc, configFile);
     configFile.close();
 
-    Serial << "Darkwad Lighting Up...\n";
+    JsonObject obj      = jsonDoc.as<JsonObject>();
+    config.bikeName     = jsonDoc["bikeName"] | "Darkwad";
+    config.speed        = jsonDoc["speed"] | 500;
+    config.fade         = jsonDoc["fade"] | 25;
+    config.brightness   = jsonDoc["brightness"] | 50;
+    config.num_leds     = jsonDoc["num_leds"] | 100;
+    config.num_lights   = jsonDoc["num_lights"] | 1;
+    config.num_params   = jsonDoc["num_params"] | 3;
+    config.bump_led     = jsonDoc["bump_led"] | 0;
+    config.num_controls = jsonDoc["num_controls"] | 0;
+
+    if (obj.containsKey("lights")) {
+        JsonArray jsonLights = obj["lights"];
+        for (JsonVariant light : jsonLights) {
+            Serial << light.as<char*>() << '\n';
+        }
+    }
+
+    Serial << config.bikeName << " Lighting Up...\n";
     delay(10);
 
     FastLED.setBrightness(BRIGHTNESS_SCALE);

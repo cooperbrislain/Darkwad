@@ -1,3 +1,7 @@
 {
-  "bikeName": "Darkwad"
+  "bikeName": "Darkwad",
+  "lights": [
+    { "name": "test" },
+    { "name": "foo" }
+  ]
 }
