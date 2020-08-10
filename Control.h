@@ -3,12 +3,16 @@
 
 #include <Arduino.h>
 #include <iostream>
+
+#define DEFAULT_PINS 4, 0, 2, 15
+#define DEFAULT_SAMPLE_RATE 25
+
 #include "config.h"
+
+#define NULF *[](int arg) { }
 
 typedef void(*ControlFn)(int);
 enum ControlType { CTL_DIGITAL, CTL_ANALOG, CTL_TOUCH };
-
-#define NULF [](int arg) { }
 
 template<class T> inline Print &operator <<(Print &stream, T arg) { stream.print(arg); return stream; }
 

@@ -5,8 +5,9 @@
 class Button: public Control {
     private:
 
+        enum States { UP, DOWN };
         int _state;
-        int _pin;
+        int _pins;
         int _pressed;
         int _count;
         ControlFn _pressFn;
@@ -17,21 +18,21 @@ class Button: public Control {
 
         Button() :
             Control { "Button", CTL_DIGITAL, CTL_SAMPLE_RATE },
-            _pin            { DEFAULT_CTL_PIN },
+            _pins           { DEFAULT_CTL_PIN },
             _pressFn        { NULF },
             _stilldownFn    { NULF },
             _releaseFn      { NULF }
         { };
         Button(String name, int pin, ControlFn pressFn, ControlFn stilldownFn, ControlFn releaseFn) :
             Control         { name, CTL_DIGITAL, CTL_SAMPLE_RATE },
-            _pin            { pin },
+            _pins           { pin },
             _pressFn        { pressFn },
             _stilldownFn    { stilldownFn },
             _releaseFn      { releaseFn }
         { };
         Button(String name, int pin) :
             Control         { name, CTL_DIGITAL, CTL_SAMPLE_RATE },
-            _pin            { pin },
+            _pins           { pin },
             _pressFn        { NULF },
             _stilldownFn    { NULF },
             _releaseFn      { NULF }
