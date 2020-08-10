@@ -29,7 +29,7 @@ class Control {
             _name { name },
             _type { type },
             _sampleRate { sampleRate }
-        { };
+        { Serial << "New Control Created\n"; };
         String          getName();
         ControlType     getType();
         virtual int     getState() = 0;

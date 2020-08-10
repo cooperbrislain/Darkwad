@@ -8,6 +8,9 @@ CRGB leds[NUM_LEDS];
 Light lights[NUM_LIGHTS];
 Control* controls[NUM_CONTROLS];
 
+BrakeControl brake1;
+Button gripButton, leftSwitch, rightSwitch;
+
 int speed = GLOBAL_SPEED;
 int count = 0;
 
@@ -66,7 +69,7 @@ void setup() {
 
     Serial << "Initializing Controls\n";
 
-    Button leftSwitch = Button("left", T8,
+    leftSwitch = Button("left", T8,
         [](int val) {
             LED_LEFT.turn_on();
             LED_LEFT.set_program("chase");
@@ -76,8 +79,7 @@ void setup() {
         [](int val) { Serial << "LEFT\n"; },
         [](int val) { LED_LEFT.turn_off(); }
     );
-    Serial << "left ";
-    Button rightSwitch = Button("right", T9,
+    rightSwitch = Button("right", T9,
         [](int val) {
             LED_RIGHT.set_program("chase");
             LED_RIGHT.set_param(0,25);
@@ -87,36 +89,31 @@ void setup() {
         [](int val) { Serial << "RIGHT\n"; },
         [](int val) { LED_RIGHT.turn_off(); }
     );
-    Serial << "right ";
-    Button gripButton = Button("button", 12,
-        [](int val) {  },
-        [](int val) {
-            Serial << "BUTTON\n";
-            LED_FRONT.turn_on();
-        },
+    gripButton = Button("button", 12,
+        [](int val) { LED_FRONT.turn_on(); },
+        [](int val) { Serial << "BUTTON\n"; },
         [](int val) {
             LED_FRONT.turn_off();
             LED_LEFT.turn_off();
             LED_RIGHT.turn_off();
         }
     );
-    Serial << "button ";
-    BrakeControl brake1 = BrakeControl("brake", 14, 15,
+    brake1 = BrakeControl("brake", 14, 15,
         [](int val) { LED_REAR.turn_on(); },
         [](int val) { Serial << "BRAKE 1\n"; },
         [](int val) { LED_REAR.turn_off(); }
     );
-    Serial << "brake ";
-
 
     controls[0] = &leftSwitch;
     controls[1] = &rightSwitch;
     controls[2] = &gripButton;
     controls[3] = &brake1;
 
-    Serial << "Controls Initialized\n";
+    Serial << "Controls Initialized...\n";
 
     blackout();
+
+    Serial << "Starting!\n\n";
     delay(150);
 }
 
@@ -129,18 +126,26 @@ void loop() {
 //    }
 //    file.close();
 
-    Serial << "loop";
+    Serial << "loop: ";
 
-    for (int i=0; i<NUM_CONTROLS; i++)
-        if (count%controls[i]->getSampleRate() == 0)
+    for (int i=0; i<NUM_CONTROLS; i++) {
+        if (count % controls[i]->getSampleRate() == 0) {
+            String controlName = controls[i]->getName();
+            int controlState = controls[i]->getState();
+            Serial << " | " << controlName << " : " << controlState << " | ";
             controls[i]->update();
-    for (int i=0; i<NUM_LIGHTS; i++)
-        if (count%lights[i].get_param(0) == 0)
-            lights[i].update();
+        }
+    }
 
+    for (int i=0; i<NUM_LIGHTS; i++) {
+        if (count % lights[i].get_param(0) == 0) {
+            lights[i].update();
+        }
+    }
     FastLED.show();
     count++;
     delay(1000/speed);
+    Serial << '\n';
     #ifdef SLOW
         delay(SLOW);
     #endif

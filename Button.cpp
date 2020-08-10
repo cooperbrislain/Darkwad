@@ -14,7 +14,7 @@ void Button::setRelease(ControlFn releaseFn) {
 
 int Button::getState() {
     int val = digitalRead(_pin);
-    return (val == HIGH)? 1 : 0;
+    return (val == HIGH? 1 : 0);
 }
 
 void Button::update() {
