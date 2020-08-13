@@ -30,7 +30,7 @@ public:
         _name { "Control" },
         _type { CTL_DIGITAL },
         _sampleRate { CTL_SAMPLE_RATE }
-    { };
+    { Serial << "New Control Created\n"; };
     Control(String name, ControlType type, int sampleRate) :
         _name { name },
         _type { type },

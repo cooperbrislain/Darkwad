@@ -7,21 +7,20 @@ class DPad: public Control {
 private:
 
     enum States { CENTER, UP, DOWN, LEFT, RIGHT };
+    static const int num_pins = 4;
+    int _pins[num_pins];
     int _state;
-    int _pins[4];
     int _pressed;
     int _count;
 
 public:
 
     DPad() :
-        Control { "DPad", CTL_DIGITAL, DEFAULT_SAMPLE_RATE },
-        _pins   { DEFAULT_PINS }
+        Control { "DPad", CTL_DIGITAL, DEFAULT_SAMPLE_RATE }
     { };
     DPad(String name, int* pins) :
-        Control { name, CTL_DIGITAL, DEFAULT_SAMPLE_RATE },
-        _pins   { pins }
-    { };
+        Control { name, CTL_DIGITAL, DEFAULT_SAMPLE_RATE }
+    { for (int i=0; i<num_pins; i++) _pins[i] = pins[i]; };
 
     int  getState();
     void update();

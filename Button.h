@@ -2,14 +2,13 @@
 
 #define SAMPLES 3
 
-#define DEFAULT_CTL_PIN 4
-
 class Button: public Control {
     private:
 
         enum States { UP, DOWN };
         int _state;
-        int _pins;
+        static const int num_pins = 1;
+        int _pins[num_pins];
         int _pressed;
         int _count;
         ControlFn _pressFn;
@@ -20,7 +19,6 @@ class Button: public Control {
 
         Button() :
             Control { "Button", CTL_DIGITAL, CTL_SAMPLE_RATE },
-            _pins           { DEFAULT_CTL_PIN },
             _pressFn        { NULF },
             _stilldownFn    { NULF },
             _releaseFn      { NULF }

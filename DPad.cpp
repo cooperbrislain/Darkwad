@@ -1,7 +1,8 @@
 #include "DPad.h"
 
 int DPad::getState() {
-    for (int pin : _pins) {
+    for (int i=0; i<4; i++) {
+        int pin = _pins[i];
         int val = digitalRead(pin);
         if (val == HIGH) {
             return pin+1;
