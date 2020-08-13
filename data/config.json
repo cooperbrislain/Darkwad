@@ -26,12 +26,14 @@
     {
       "name": "Button",
       "type": "Button",
-      "pin":  12
+      "pin":  12,
+      "sampleRate": 10
     },
     {
       "name": "DHat",
       "type": "DPad",
-      "pins": [4, 0, 2, 15]
+      "pins": [4, 0, 2, 15],
+      "sampleRate": 5
     }
   ]
 }

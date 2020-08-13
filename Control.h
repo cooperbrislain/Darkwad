@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <iostream>
+#include <ArduinoJson.h>
 
 #define DEFAULT_PINS 4, 0, 2, 15
 #define DEFAULT_SAMPLE_RATE 25
@@ -27,15 +28,22 @@ protected:
 public:
 
     Control() :
-        _name { "Control" },
-        _type { CTL_DIGITAL },
+        _name       { "Control" },
+        _type       { CTL_DIGITAL },
         _sampleRate { CTL_SAMPLE_RATE }
     { Serial << "New Control Created\n"; };
     Control(String name, ControlType type, int sampleRate) :
-        _name { name },
-        _type { type },
+        _name       { name },
+        _type       { type },
         _sampleRate { sampleRate }
     { Serial << "New Control Created\n"; };
+    Control(JsonObject obj) :
+        _name       { obj["name"].as<String>() },
+        _type       { obj["type"].as<ControlType>() },
+        _sampleRate { obj["sampleRate"].as<int>() }
+    {
+        Serial << obj["name"].as<String>();
+    };
     String          getName();
     ControlType     getType();
     virtual int     getState() = 0;
