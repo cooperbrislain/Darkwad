@@ -1,4 +1,5 @@
 #include "darkwad.h"
+
 #define LED_FRONT lights[1]
 #define LED_REAR lights[4]
 #define LED_LEFT lights[2]
@@ -7,6 +8,8 @@
 CRGB leds[NUM_LEDS];
 Light lights[NUM_LIGHTS];
 Control* controls[NUM_CONTROLS];
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 BrakeControl brake1;
 Button gripButton, leftSwitch, rightSwitch;
@@ -31,9 +34,20 @@ Config config;
 void setup() {
     Serial.begin(115200);
 
+    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+        Serial << "SSD1306 allocation failed\n";
+        for(;;);
+    }
+    display.display();
+    delay(2000);
+    display.clearDisplay();
+    display.print("Test");
+    display.display();
+    delay(2000);
+
     Serial << "Loading configuration...\n";
     SPIFFS.begin(true);
-    StaticJsonDocument<1024> jsonDoc;
+    StaticJsonDocument<2048> jsonDoc;
     File configFile = SPIFFS.open("/config.json", FILE_READ);
     deserializeJson(jsonDoc, configFile);
     configFile.close();
@@ -51,9 +65,13 @@ void setup() {
 
     if (obj.containsKey("lights")) {
         JsonArray jsonLights = obj["lights"];
-        for (JsonObject light : jsonLights) {
-            String lightName = light["name"];
-            Serial << lightName << '\n';
+        int numLights = jsonLights.size();
+        for (int i=0; i<numLights; i++) {
+            String lightName    = light["name"];
+            int led_offset      = light["led_offset"];
+            int led_count       = light["led_count"];
+            Light* newLight     = new Light(leds, led_offset, led_count);
+            lights[i] = newLight;
         }
         config.num_lights = jsonLights.size();
     }
@@ -112,12 +130,12 @@ void setup() {
 
 void loop() {
 
-    Serial << "loop: ";
+//    Serial << "loop: ";
 
-    Serial << config.num_controls << " Controls [";
+//    Serial << config.num_controls << " Controls [";
     for (int i=0; i<config.num_controls; i++) {
         if (count % controls[i]->getSampleRate() == 0) {
-            Serial << " " << i << " ";
+//            Serial << " " << i << " ";
             String controlName = controls[i]->getName();
             int controlState = controls[i]->getState();
 //          Serial << " | " << controlName << " : " << controlState << " | ";
@@ -125,14 +143,14 @@ void loop() {
         }
     }
 
-    Serial << "] Lights [";
+//    Serial << "] Lights [";
     for (int i=0; i<config.num_lights; i++) {
         if (count % lights[i].get_param(0) == 0) {
-            Serial << " " << i << " ";
+//            Serial << " " << i << " ";
             lights[i].update();
         }
     }
-    Serial << "]\n";
+//    Serial << "]\n";
 
     FastLED.show();
     count++;

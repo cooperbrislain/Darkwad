@@ -34,6 +34,18 @@
       "type": "DPad",
       "pins": [4, 0, 2, 15],
       "sampleRate": 5
+    },
+    {
+      "name": "Left",
+      "type": "Button",
+      "pins": [34],
+      "sampleRate": 10
+    },
+    {
+      "name": "Right",
+      "type": "Button",
+      "pins": [35],
+      "sampleRate": 10
     }
   ]
 }

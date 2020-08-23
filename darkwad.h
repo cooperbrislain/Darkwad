@@ -8,6 +8,10 @@
 #include <SPIFFS.h>
 #include <ArduinoJson.h>
 #include <FastLED.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Wire.h>
+
 #include <iostream>
 
 #include "config.h"
