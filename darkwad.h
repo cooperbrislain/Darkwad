@@ -14,6 +14,7 @@
 
 #include "Light.h"
 #include "Button.h"
+#include "DPad.h"
 #include "BrakeControl.h"
 
 #define halt(s) { Serial.println(F( s )); while(1);  }

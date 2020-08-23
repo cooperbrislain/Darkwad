@@ -4,7 +4,9 @@
 
 String Control::getName() { return _name; }
 ControlType Control::getType() { return _type; }
-int Control::getSampleRate() { return _sampleRate; }
+int Control::getSampleRate() {
+    return _sampleRate;
+}
 
 // setters
 

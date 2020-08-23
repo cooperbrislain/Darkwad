@@ -23,16 +23,16 @@ class Button: public Control {
             _stilldownFn    { NULF },
             _releaseFn      { NULF }
         { };
-        Button(String name, int pin, ControlFn pressFn, ControlFn stilldownFn, ControlFn releaseFn) :
+        Button(String name, int* pins, ControlFn pressFn, ControlFn stilldownFn, ControlFn releaseFn) :
             Control         { name, CTL_DIGITAL, CTL_SAMPLE_RATE },
-            _pins           { pin },
+            _pins           { pins[0] },
             _pressFn        { pressFn },
             _stilldownFn    { stilldownFn },
             _releaseFn      { releaseFn }
         { };
-        Button(String name, int pin) :
+        Button(String name, int* pins) :
             Control         { name, CTL_DIGITAL, CTL_SAMPLE_RATE },
-            _pins           { pin },
+            _pins           { pins[0] },
             _pressFn        { NULF },
             _stilldownFn    { NULF },
             _releaseFn      { NULF }

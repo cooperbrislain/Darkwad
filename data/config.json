@@ -26,7 +26,7 @@
     {
       "name": "Button",
       "type": "Button",
-      "pin":  12,
+      "pins":  [12],
       "sampleRate": 10
     },
     {

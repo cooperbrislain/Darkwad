@@ -78,14 +78,29 @@ void setup() {
 
     if (obj.containsKey("controls")) {
         JsonArray jsonControls = obj["controls"];
-        for (JsonObject control : jsonControls) {
+        int numControls = jsonControls.size();
+        for (int i=0; i<numControls; i++) {
+            JsonObject control = jsonControls[i];
             String controlName = control["name"];
-            Serial << controlName << '\n';
+            String controlType = control["type"];
+            JsonArray jsonPins = control["pins"];
+            const int numPins = jsonPins.size();
+            int pins[numPins];
+            for (int j=0; j<numPins; j++) pins[j] = jsonPins[j];
+            Serial << "[" << controlType << "] " << controlName << '\n';
+            if (controlType == "Button") {
+                Button* newButton = new Button(controlName, pins);
+                controls[i] = newButton;
+            }
+            if (controlType == "DPad") {
+                DPad* newDPad = new DPad(controlName, pins);
+                controls[i] = newDPad;
+            }
         }
-        config.num_controls = jsonControls.size();
+        config.num_controls = numControls;
     }
 
-    Serial << "Controls Initialized...\n";
+    Serial << config.num_controls << " Controls Initialized...\n";
 
     blackout();
 
@@ -99,7 +114,7 @@ void loop() {
 
     Serial << "loop: ";
 
-    Serial << "Controls [";
+    Serial << config.num_controls << " Controls [";
     for (int i=0; i<config.num_controls; i++) {
         if (count % controls[i]->getSampleRate() == 0) {
             Serial << " " << i << " ";
