@@ -6,7 +6,7 @@
 #define LED_RIGHT lights[3]
 
 CRGB leds[NUM_LEDS];
-Light lights[NUM_LIGHTS];
+Light* lights[NUM_LIGHTS];
 Control* controls[NUM_CONTROLS];
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -67,10 +67,11 @@ void setup() {
         JsonArray jsonLights = obj["lights"];
         int numLights = jsonLights.size();
         for (int i=0; i<numLights; i++) {
+            JsonObject light    = jsonLights[i];
             String lightName    = light["name"];
             int led_offset      = light["led_offset"];
             int led_count       = light["led_count"];
-            Light* newLight     = new Light(leds, led_offset, led_count);
+            Light* newLight     = new Light(lightName, &leds[0], led_offset, led_count);
             lights[i] = newLight;
         }
         config.num_lights = jsonLights.size();
@@ -85,10 +86,6 @@ void setup() {
     blink();
 
     Serial << "LEDs initialized\n";
-
-//    #ifdef BUMP_LED
-//        lights[0] = Light("bump", &leds[0], 0, 1);
-//    #endif
 
     Serial << "It's lit fam!\n";
 
@@ -145,9 +142,9 @@ void loop() {
 
 //    Serial << "] Lights [";
     for (int i=0; i<config.num_lights; i++) {
-        if (count % lights[i].get_param(0) == 0) {
+        if (count % lights[i]->get_param(0) == 0) {
 //            Serial << " " << i << " ";
-            lights[i].update();
+            lights[i]->update();
         }
     }
 //    Serial << "]\n";
