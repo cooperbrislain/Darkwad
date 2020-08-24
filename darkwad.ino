@@ -1,12 +1,15 @@
 #include "darkwad.h"
+
 #define LED_FRONT lights[1]
 #define LED_REAR lights[4]
 #define LED_LEFT lights[2]
 #define LED_RIGHT lights[3]
 
 CRGB leds[NUM_LEDS];
-Light lights[NUM_LIGHTS];
+Light* lights[NUM_LIGHTS];
 Control* controls[NUM_CONTROLS];
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 BrakeControl brake1;
 Button gripButton, leftSwitch, rightSwitch;
@@ -31,9 +34,20 @@ Config config;
 void setup() {
     Serial.begin(115200);
 
+    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+        Serial << "SSD1306 allocation failed\n";
+        for(;;);
+    }
+    display.display();
+    delay(2000);
+    display.clearDisplay();
+    display.print("Test");
+    display.display();
+    delay(2000);
+
     Serial << "Loading configuration...\n";
     SPIFFS.begin(true);
-    StaticJsonDocument<1024> jsonDoc;
+    StaticJsonDocument<2048> jsonDoc;
     File configFile = SPIFFS.open("/config.json", FILE_READ);
     deserializeJson(jsonDoc, configFile);
     configFile.close();
@@ -51,9 +65,30 @@ void setup() {
 
     if (obj.containsKey("lights")) {
         JsonArray jsonLights = obj["lights"];
-        for (JsonObject light : jsonLights) {
-            String lightName = light["name"];
+        int numLights = jsonLights.size();
+        for (int i=0; i<numLights; i++) {
+            JsonObject light    = jsonLights[i];
+            String lightName    = light["name"];
+            int led_offset      = light["led_offset"];
+            int led_count       = light["led_count"];
+            String color        = light["color"];
+            JsonArray jsonLeds  = light["leds"];
+            Light* newLight;
+            if (jsonLeds.size()) {
+                CRGB* led_list[jsonLeds.size()];
+                led_count = jsonLeds.size();
+                Serial << led_count << '\n';
+                for (int j=0; j<jsonLeds.size(); j++) {
+                    led_list[j] = &leds[jsonLeds[j].as<int>()];
+                }
+                newLight = new Light(lightName, led_list);
+                newLight->setColor()
+            } else if (led_count) {
+                newLight = new Light(lightName, &leds[0], led_offset, led_count);
+            }
             Serial << lightName << '\n';
+
+            lights[i] = newLight;
         }
         config.num_lights = jsonLights.size();
     }
@@ -67,10 +102,6 @@ void setup() {
     blink();
 
     Serial << "LEDs initialized\n";
-
-//    #ifdef BUMP_LED
-//        lights[0] = Light("bump", &leds[0], 0, 1);
-//    #endif
 
     Serial << "It's lit fam!\n";
 
@@ -112,12 +143,12 @@ void setup() {
 
 void loop() {
 
-    Serial << "loop: ";
+//    Serial << "loop: ";
 
-    Serial << config.num_controls << " Controls [";
+//    Serial << config.num_controls << " Controls [";
     for (int i=0; i<config.num_controls; i++) {
         if (count % controls[i]->getSampleRate() == 0) {
-            Serial << " " << i << " ";
+//            Serial << " " << i << " ";
             String controlName = controls[i]->getName();
             int controlState = controls[i]->getState();
 //          Serial << " | " << controlName << " : " << controlState << " | ";
@@ -125,14 +156,14 @@ void loop() {
         }
     }
 
-    Serial << "] Lights [";
+//    Serial << "] Lights [";
     for (int i=0; i<config.num_lights; i++) {
-        if (count % lights[i].get_param(0) == 0) {
-            Serial << " " << i << " ";
-            lights[i].update();
+        if (count % lights[i]->get_param(0) == 0) {
+//            Serial << " " << i << " ";
+            lights[i]->update();
         }
     }
-    Serial << "]\n";
+//    Serial << "]\n";
 
     FastLED.show();
     count++;

@@ -10,30 +10,45 @@
       "name": "left",
       "led_offset": 0,
       "led_count": 5,
+      "color": "orange",
       "reverse": 1
     },
     {
       "name": "right",
+      "color": "orange",
       "led_offset": 20,
       "led_count": 5
     },
     {
       "name": "rear",
-      "leds": [6, 7, 19, 20]
+      "leds": [6, 7, 19, 20],
+      "color": "red"
     }
   ],
   "controls": [
     {
       "name": "Button",
       "type": "Button",
-      "pins":  [12],
+      "pins": [12],
       "sampleRate": 10
     },
     {
       "name": "DHat",
       "type": "DPad",
-      "pins": [4, 0, 2, 15],
+      "pins": [12,14,27,26],
       "sampleRate": 5
+    },
+    {
+      "name": "Left",
+      "type": "Button",
+      "pins": [34],
+      "sampleRate": 10
+    },
+    {
+      "name": "Right",
+      "type": "Button",
+      "pins": [35],
+      "sampleRate": 10
     }
   ]
 }

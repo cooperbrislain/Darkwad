@@ -86,6 +86,7 @@ public:
     void set_program(const char* program);
     void set_param(int p, int v);
     void set_params(int* params);
+    void setColor(String colorName);
     int get_param(int p);
     CRGB get_rgb();
     CHSV get_hsv();
