@@ -32,7 +32,8 @@
     {
       "name": "rear",
       "leds": [6, 7, 19, 20],
-      "color": "red"
+      "color": "red",
+      "program": "blink"
     }
   ],
   "controls": [

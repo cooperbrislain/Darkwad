@@ -105,7 +105,15 @@ public:
         } else {
             // bad
         }
-        if (jsonLight["program"]) this->setProgram(jsonLight["program"]);
+        if (jsonLight["program"])   this->setProgram(jsonLight["program"]);
+        if (jsonLight["color"])     this->setColor(jsonLight["color"]);
+        if (jsonLight["params"]) {
+            JsonArray jsonParams = jsonLight["params"];
+            int numParams = jsonParams.size();
+            for (int i=0; i<numParams; i++) {
+                _params[i] = jsonParams[i].as<int>();
+            }
+        }
     };
     const char* getName();
     void turnOn();
