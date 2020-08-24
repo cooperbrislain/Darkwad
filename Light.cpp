@@ -5,7 +5,7 @@ void Light::update() {
     _count++;
 }
 
-void Light::turn_on() {
+void Light::turnOn() {
     #ifdef FADE
         _prog = &Light::_prog_fadein;
         _params[1] = FADE;
@@ -14,7 +14,7 @@ void Light::turn_on() {
     update();
 }
 
-void Light::turn_off() {
+void Light::turnOff() {
     if(_onoff) {
         #ifdef FADE
             _prog = &Light::_prog_fadeout;
@@ -26,7 +26,7 @@ void Light::turn_off() {
     }
 }
 
-void Light::set_on(int onoff) {
+void Light::turn(int onoff) {
     _onoff = onoff;
 }
 
@@ -44,80 +44,87 @@ void Light::blink() {
 
 void Light::toggle() {
     if (_onoff) {
-        turn_off();
+        turnOff();
     } else {
-        turn_on();
+        turnOn();
     }
 }
 
-void Light::set_rgb(CRGB color) {
+void Light::setRgb(CRGB color) {
     _color = color;
 }
 
-void Light::set_hue(int val) {
-    CHSV hsv_color = get_hsv();
+void Light::setHue(int val) {
+    CHSV hsv_color = getHsv();
     hsv_color.h = val;
-    set_hsv(hsv_color);
+    setHsv(hsv_color);
 }
 
-void Light::set_brightness(int val) {
-    CHSV hsv_color = get_hsv();
+void Light::setColor(String color) {
+    if (color == "red")     _color = CRGB::Red;
+    if (color == "orange")  _color = CRGB::Orange;
+    if (color == "blue")    _color = CRGB::Blue;
+    if (color == "green")   _color = CRGB::Green;
+}
+
+void Light::setBrightness(int val) {
+    CHSV hsv_color = getHsv();
     hsv_color.v = min(val, 100);
-    set_hsv(hsv_color);
+    setHsv(hsv_color);
 }
 
-void Light::set_saturation(int val) {
-    CHSV hsv_color = get_hsv();
+void Light::setSaturation(int val) {
+    CHSV hsv_color = getHsv();
     hsv_color.s = min(val, 100);
-    set_hsv(hsv_color);
+    setHsv(hsv_color);
 }
 
-void Light::set_hsv(int hue, int sat, int val) {
+void Light::setHsv(int hue, int sat, int val) {
     _color = CHSV(hue, sat, val);
 }
 
-void Light::set_hsv(CHSV color) {
+void Light::setHsv(CHSV color) {
     _color = color;
 }
 
-CHSV Light::get_hsv() {
+CHSV Light::getHsv() {
     return rgb2hsv_approximate(_color);
 }
 
-CRGB Light::get_rgb() {
+CRGB Light::getRgb() {
     return _color;
 }
 
-void Light::set_program(const char* program) {
-    if (strcmp(program, "solid")==0) _prog = &Light::_prog_solid;
-    if (strcmp(program, "chase")==0) {
+void Light::setProgram(String progName) {
+    if (progName == "solid") _prog = &Light::_prog_solid;
+    if (progName == "chase") {
         _prog = &Light::_prog_chase;
         _params[1] = _params[1]? _params[1] : 35;
     }
-    if (strcmp(program, "fade")==0)  _prog = &Light::_prog_fade;
-    if (strcmp(program, "blink")==0) _prog = &Light::_prog_blink;
-    if (strcmp(program, "warm")==0) {
+    if (progName == "fade")  _prog = &Light::_prog_fade;
+    if (progName == "blink") _prog = &Light::_prog_blink;
+    if (progName == "warm") {
         _prog = &Light::_prog_warm;
         _params[0] = 50;
     }
-    if (strcmp(program, "lfo")==0) _prog = &Light::_prog_lfo;
+    if (progName == "lfo") _prog = &Light::_prog_lfo;
 }
 
-void Light::set_params(int* params) {
+void Light::setParams(int* params) {
     for (int i=0; i<sizeof(params); i++) {
         _params[i] = params[i];
     }
 }
 
-void Light::set_param(int p, int v) {
+void Light::setParam(int p, int v) {
     _params[p] = v;
 }
 
-int Light::get_param(int p) {
+int Light::getParam(int p) {
     return _params[p];
 }
 
-const char* Light::get_name() {
+const char* Light::getName() {
     return _name.c_str();
 }
 

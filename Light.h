@@ -2,6 +2,8 @@
 #include <SPI.h>
 #include <FastLED.h>
 #include "config.h"
+#include <iostream>
+#include <ArduinoJson.h>
 
 class Light {
 private:
@@ -32,24 +34,24 @@ private:
 public:
 
     Light() :
-        _color { CRGB::White },
-        _onoff { 0 },
-        _num_leds { 0 },
-        _name { "light" },
-        _prog { &Light::_prog_solid },
-        _count { 0 },
-        _params { 1, 0, 0, 0 }
+        _color      { CRGB::White },
+        _onoff      { 0 },
+        _num_leds   { 0 },
+        _name       { "light" },
+        _prog       { &Light::_prog_solid },
+        _count      { 0 },
+        _params     { 1, 0, 0, 0 }
     { };
     Light(String name, CRGB* leds, int offset, int num_leds, int inverse=0) :
-        _name { name },
-        _num_leds { num_leds },
-        _color { CRGB::White },
-        _onoff { 0 },
-        _count { 0 },
-        _speed { 1 },
-        _offset { offset },
-        _prog { &Light::_prog_solid },
-        _params { 1, 0, 0, 0 }
+        _name       { name },
+        _num_leds   { num_leds },
+        _color      { CRGB::White },
+        _onoff      { 0 },
+        _count      { 0 },
+        _speed      { 1 },
+        _offset     { offset },
+        _prog       { &Light::_prog_solid },
+        _params     { 1, 0, 0, 0 }
     {
         _leds = new CRGB*[num_leds];
         for (int i=0; i<num_leds; i++) {
@@ -57,39 +59,72 @@ public:
         }
     };
     Light(String name, CRGB** leds) :
-        _name { name },
-        _color { CRGB::White },
-        _count { 0 },
-        _offset { 0 },
-        _onoff { 0 },
-        _num_leds { sizeof(leds) },
-        _prog { &Light::_prog_solid },
-        _params { 1, 0, 0, 0 }
+        _name       { name },
+        _color      { CRGB::White },
+        _count      { 0 },
+        _offset     { 0 },
+        _onoff      { 0 },
+        _speed      { 1 },
+        _num_leds   { sizeof(leds) },
+        _prog       { &Light::_prog_solid },
+        _params     { 1, 0, 0, 0 }
     {
         _leds = new CRGB*[_num_leds];
         for (int i=0; i<sizeof(leds); i++) {
             _leds[i] = leds[i];
         }
     };
-    const char* get_name();
-    void turn_on();
-    void turn_off();
-    void set_on(int onoff);
+    Light(CRGB* leds, JsonObject jsonLight) :
+        _name       { jsonLight["name"].as<String>() },
+        _onoff      { 0 },
+        _offset     { 0 },
+        _count      { 0 },
+        _speed      { 1 },
+        _color      { CRGB::White },
+        _prog       { &Light::_prog_solid },
+        _params     { 1, 0, 0, 0 }
+    {
+        if (jsonLight["leds"]) {
+            JsonArray jsonLeds = jsonLight["leds"];
+            int led_count = jsonLeds.size();
+            _leds = new CRGB*[led_count];
+            for (int i=0; i<led_count; i++) {
+                _leds[i] = &leds[jsonLeds[i].as<int>()];
+            }
+            _num_leds = led_count;
+
+        } else if (jsonLight["led_count"]) {
+            int led_count   = jsonLight["led_count"];
+            int led_offset  = jsonLight["led_offset"];
+            int inverse     = jsonLight["inverse"];
+            _leds = new CRGB*[led_count];
+            for (int i=0; i<led_count; i++) {
+                _leds[i] = inverse? &leds[led_offset+led_count-i-1] : &leds[led_offset+i];
+            }
+            _num_leds = led_count;
+        } else {
+            // bad
+        }
+    };
+    const char* getName();
+    void turnOn();
+    void turnOff();
+    void turn(int onoff);
     void blink();
     void toggle();
-    void set_hue(int val);
-    void set_brightness(int val);
-    void set_saturation(int val);
-    void set_rgb(CRGB);
-    void set_hsv(int hue, int sat, int val);
-    void set_hsv(CHSV);
-    void set_program(const char* program);
-    void set_param(int p, int v);
-    void set_params(int* params);
+    void setHue(int);
+    void setRgb(CRGB);
+    void setHsv(CHSV);
+    void setHsv(int hue, int sat, int val);
+    void setBrightness(int);
+    void setSaturation(int);
+    void setProgram(String programName);
+    void setParam(int p, int v);
+    void setParams(int* params);
     void setColor(String colorName);
-    int get_param(int p);
-    CRGB get_rgb();
-    CHSV get_hsv();
+    int  getParam(int p);
+    CRGB getRgb();
+    CHSV getHsv();
     void update();
 
 };

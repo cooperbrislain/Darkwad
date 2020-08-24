@@ -39,7 +39,6 @@ void setup() {
         for(;;);
     }
     display.display();
-    delay(2000);
     display.clearDisplay();
     display.print("Test");
     display.display();
@@ -62,51 +61,26 @@ void setup() {
     config.bump_led     = jsonDoc["bump_led"] | 0;
 
     Serial << "Loading Lights\n";
-
     if (obj.containsKey("lights")) {
         JsonArray jsonLights = obj["lights"];
         int numLights = jsonLights.size();
         for (int i=0; i<numLights; i++) {
-            JsonObject light    = jsonLights[i];
-            String lightName    = light["name"];
-            int led_offset      = light["led_offset"];
-            int led_count       = light["led_count"];
-            String color        = light["color"];
-            JsonArray jsonLeds  = light["leds"];
-            Light* newLight;
-            if (jsonLeds.size()) {
-                CRGB* led_list[jsonLeds.size()];
-                led_count = jsonLeds.size();
-                Serial << led_count << '\n';
-                for (int j=0; j<jsonLeds.size(); j++) {
-                    led_list[j] = &leds[jsonLeds[j].as<int>()];
-                }
-                newLight = new Light(lightName, led_list);
-                newLight->setColor()
-            } else if (led_count) {
-                newLight = new Light(lightName, &leds[0], led_offset, led_count);
-            }
-            Serial << lightName << '\n';
-
+            JsonObject jsonLight    = jsonLights[i];
+            Light* newLight         = new Light(&leds[0], jsonLight);
             lights[i] = newLight;
+            Serial << "Added " << newLight->getName() << '\n';
         }
         config.num_lights = jsonLights.size();
     }
 
     Serial << config.bikeName << " Lighting Up...\n";
-    delay(10);
-
-    FastLED.setBrightness(BRIGHTNESS_SCALE);
+    FastLED.setBrightness(config.brightness);
     FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, BGR, DATA_RATE_MHZ(24)>(leds, NUM_LEDS);
-
     blink();
-
-    Serial << "LEDs initialized\n";
-
     Serial << "It's lit fam!\n";
+    delay(100);
 
     Serial << "Initializing Controls\n";
-
     if (obj.containsKey("controls")) {
         JsonArray jsonControls = obj["controls"];
         int numControls = jsonControls.size();
@@ -143,35 +117,27 @@ void setup() {
 
 void loop() {
 
-//    Serial << "loop: ";
-
-//    Serial << config.num_controls << " Controls [";
     for (int i=0; i<config.num_controls; i++) {
         if (count % controls[i]->getSampleRate() == 0) {
-//            Serial << " " << i << " ";
+            Serial << " " << i << " ";
             String controlName = controls[i]->getName();
             int controlState = controls[i]->getState();
-//          Serial << " | " << controlName << " : " << controlState << " | ";
+            Serial << " | " << controlName << " : " << controlState << " | ";
             controls[i]->update();
         }
     }
 
-//    Serial << "] Lights [";
     for (int i=0; i<config.num_lights; i++) {
-        if (count % lights[i]->get_param(0) == 0) {
-//            Serial << " " << i << " ";
+        if (count % lights[i]->getParam(0) == 0) {
+            Serial << " " << i << " ";
             lights[i]->update();
         }
     }
-//    Serial << "]\n";
 
     FastLED.show();
+
     count++;
     delay(1000/speed);
-    Serial << '\n';
-    #ifdef SLOW
-        delay(SLOW);
-    #endif
 }
 
 // LED FUNCTIONS
@@ -186,18 +152,6 @@ void blink() {
         leds[i] = CRGB::Black;
     }
     FastLED.show();
-}
-
-void blink_rainbow() {
-    CHSV color;
-    for (int t=0; t<100; t++) {
-        color = CHSV((t*5)%255, 255, 100);
-        for (int i=0; i<NUM_LEDS; i++) {
-            leds[i] = color;
-        }
-        FastLED.show();
-        delay(10);
-    }
 }
 
 void blackout() {
