@@ -1,14 +1,22 @@
 {
   "bikeName": "Darkwad",
+  "bump_led": 1,
   "lights": [
     {
+      "name": "bump",
+      "led_offset": 0,
+      "led_count": 1,
+      "color": "green",
+      "program": "blink"
+    },
+    {
       "name": "front",
-      "led_offset": 7,
+      "led_offset": 8,
       "led_count": 11
     },
     {
       "name": "left",
-      "led_offset": 0,
+      "led_offset": 1,
       "led_count": 5,
       "color": "orange",
       "reverse": 1
@@ -16,7 +24,7 @@
     {
       "name": "right",
       "color": "orange",
-      "led_offset": 20,
+      "led_offset": 21,
       "led_count": 5
     },
     {

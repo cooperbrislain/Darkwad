@@ -67,28 +67,10 @@ void setup() {
         JsonArray jsonLights = obj["lights"];
         int numLights = jsonLights.size();
         for (int i=0; i<numLights; i++) {
-            JsonObject light    = jsonLights[i];
-            String lightName    = light["name"];
-            int led_offset      = light["led_offset"];
-            int led_count       = light["led_count"];
-            String color        = light["color"];
-            JsonArray jsonLeds  = light["leds"];
-            Light* newLight;
-            if (jsonLeds.size()) {
-                CRGB* led_list[jsonLeds.size()];
-                led_count = jsonLeds.size();
-                Serial << led_count << '\n';
-                for (int j=0; j<jsonLeds.size(); j++) {
-                    led_list[j] = &leds[jsonLeds[j].as<int>()];
-                }
-                newLight = new Light(lightName, led_list);
-                newLight->setColor()
-            } else if (led_count) {
-                newLight = new Light(lightName, &leds[0], led_offset, led_count);
-            }
-            Serial << lightName << '\n';
-
+            JsonObject jsonLight    = jsonLights[i];
+            Light* newLight         = new Light(&leds[0], jsonLight);
             lights[i] = newLight;
+            Serial << "Added " << newLight->getName() << '\n';
         }
         config.num_lights = jsonLights.size();
     }
@@ -158,7 +140,7 @@ void loop() {
 
 //    Serial << "] Lights [";
     for (int i=0; i<config.num_lights; i++) {
-        if (count % lights[i]->get_param(0) == 0) {
+        if (count % lights[i]->getParam(0) == 0) {
 //            Serial << " " << i << " ";
             lights[i]->update();
         }
