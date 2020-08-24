@@ -71,6 +71,7 @@ void setup() {
             String lightName    = light["name"];
             int led_offset      = light["led_offset"];
             int led_count       = light["led_count"];
+            String color        = light["color"];
             JsonArray jsonLeds  = light["leds"];
             Light* newLight;
             if (jsonLeds.size()) {
@@ -81,6 +82,7 @@ void setup() {
                     led_list[j] = &leds[jsonLeds[j].as<int>()];
                 }
                 newLight = new Light(lightName, led_list);
+                newLight->setColor()
             } else if (led_count) {
                 newLight = new Light(lightName, &leds[0], led_offset, led_count);
             }
