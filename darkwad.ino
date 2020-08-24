@@ -71,7 +71,21 @@ void setup() {
             String lightName    = light["name"];
             int led_offset      = light["led_offset"];
             int led_count       = light["led_count"];
-            Light* newLight     = new Light(lightName, &leds[0], led_offset, led_count);
+            JsonArray jsonLeds  = light["leds"];
+            Light* newLight;
+            if (jsonLeds.size()) {
+                CRGB* led_list[jsonLeds.size()];
+                led_count = jsonLeds.size();
+                Serial << led_count << '\n';
+                for (int j=0; j<jsonLeds.size(); j++) {
+                    led_list[j] = &leds[jsonLeds[j].as<int>()];
+                }
+                newLight = new Light(lightName, led_list);
+            } else if (led_count) {
+                newLight = new Light(lightName, &leds[0], led_offset, led_count);
+            }
+            Serial << lightName << '\n';
+
             lights[i] = newLight;
         }
         config.num_lights = jsonLights.size();
