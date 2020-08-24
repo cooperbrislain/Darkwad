@@ -105,6 +105,7 @@ public:
         } else {
             // bad
         }
+        if (jsonLight["program"]) this->setProgram(jsonLight["program"]);
     };
     const char* getName();
     void turnOn();

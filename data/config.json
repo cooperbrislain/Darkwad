@@ -19,11 +19,13 @@
       "led_offset": 1,
       "led_count": 5,
       "color": "orange",
+      "program": "chase",
       "reverse": 1
     },
     {
       "name": "right",
       "color": "orange",
+      "program": "chase",
       "led_offset": 21,
       "led_count": 5
     },

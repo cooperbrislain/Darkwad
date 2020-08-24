@@ -119,17 +119,14 @@ void loop() {
 
     for (int i=0; i<config.num_controls; i++) {
         if (count % controls[i]->getSampleRate() == 0) {
-            Serial << " " << i << " ";
             String controlName = controls[i]->getName();
             int controlState = controls[i]->getState();
-            Serial << " | " << controlName << " : " << controlState << " | ";
             controls[i]->update();
         }
     }
 
     for (int i=0; i<config.num_lights; i++) {
         if (count % lights[i]->getParam(0) == 0) {
-            Serial << " " << i << " ";
             lights[i]->update();
         }
     }
