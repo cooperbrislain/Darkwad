@@ -2,6 +2,7 @@
 #include <SPI.h>
 #include <FastLED.h>
 #include "config.h"
+#include <iostream>
 #include <ArduinoJson.h>
 
 class Light {
@@ -63,6 +64,7 @@ public:
         _count      { 0 },
         _offset     { 0 },
         _onoff      { 0 },
+        _speed      { 1 },
         _num_leds   { sizeof(leds) },
         _prog       { &Light::_prog_solid },
         _params     { 1, 0, 0, 0 }
@@ -74,6 +76,10 @@ public:
     };
     Light(CRGB* leds, JsonObject jsonLight) :
         _name       { jsonLight["name"].as<String>() },
+        _onoff      { 0 },
+        _offset     { 0 },
+        _count      { 0 },
+        _speed      { 1 },
         _color      { CRGB::White },
         _prog       { &Light::_prog_solid },
         _params     { 1, 0, 0, 0 }
@@ -85,6 +91,7 @@ public:
             for (int i=0; i<led_count; i++) {
                 _leds[i] = &leds[jsonLeds[i].as<int>()];
             }
+            _num_leds = led_count;
 
         } else if (jsonLight["led_count"]) {
             int led_count   = jsonLight["led_count"];
@@ -94,6 +101,7 @@ public:
             for (int i=0; i<led_count; i++) {
                 _leds[i] = inverse? &leds[led_offset+led_count-i-1] : &leds[led_offset+i];
             }
+            _num_leds = led_count;
         } else {
             // bad
         }
