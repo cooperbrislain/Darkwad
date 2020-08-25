@@ -1,36 +1,46 @@
 {
-  "bikeName": "Darkwad",
+  "name": "Darkwad",
+  "num_leds": 101,
   "bump_led": 1,
+  "speed": 100,
   "lights": [
     {
       "name": "bump",
       "led_offset": 0,
       "led_count": 1,
       "color": "green",
-      "program": "blink"
+      "speed": 5,
+      "program": "blink",
+      "params": [1,25,0,0]
     },
     {
       "name": "front",
       "led_offset": 8,
+      "speed": 5,
       "led_count": 11
     },
     {
       "name": "left",
       "led_offset": 1,
+      "speed": 5,
       "led_count": 5,
       "color": "orange",
       "program": "chase",
-      "reverse": 1
+      "reverse": 1,
+      "params": [1,25,0,0]
     },
     {
       "name": "right",
       "color": "orange",
+      "speed": 5,
       "program": "chase",
       "led_offset": 21,
-      "led_count": 5
+      "led_count": 5,
+      "params": [1,25,0,0]
     },
     {
       "name": "rear",
+      "speed": 5,
       "leds": [6, 7, 19, 20],
       "color": "red",
       "program": "blink"

@@ -23,11 +23,4 @@
 
 #define halt(s) { Serial.println(F( s )); while(1);  }
 
-void reconnect();
-void blink();
-void blink_rainbow();
-void blackout();
-
-void mqtt_callback(char* topic, byte* payload, unsigned int length);
-
 #endif //DARKWAD_H

@@ -11,7 +11,6 @@ private:
     CRGB** _leds;
     CRGB _color;
     int _params [NUM_PARAMS];
-    int _speed;
     int _num_leds;
     int _offset;
     int _last_brightness;
@@ -48,7 +47,6 @@ public:
         _color      { CRGB::White },
         _onoff      { 0 },
         _count      { 0 },
-        _speed      { 1 },
         _offset     { offset },
         _prog       { &Light::_prog_solid },
         _params     { 1, 0, 0, 0 }
@@ -64,7 +62,6 @@ public:
         _count      { 0 },
         _offset     { 0 },
         _onoff      { 0 },
-        _speed      { 1 },
         _num_leds   { sizeof(leds) },
         _prog       { &Light::_prog_solid },
         _params     { 1, 0, 0, 0 }
@@ -79,7 +76,6 @@ public:
         _onoff      { 0 },
         _offset     { 0 },
         _count      { 0 },
-        _speed      { 1 },
         _color      { CRGB::White },
         _prog       { &Light::_prog_solid },
         _params     { 1, 0, 0, 0 }

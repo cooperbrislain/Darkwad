@@ -5,20 +5,19 @@
 #define LED_LEFT lights[2]
 #define LED_RIGHT lights[3]
 
-CRGB leds[NUM_LEDS];
-Light* lights[NUM_LIGHTS];
-Control* controls[NUM_CONTROLS];
+CRGB* leds;
+Light** lights;
+Control** controls;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 BrakeControl brake1;
 Button gripButton, leftSwitch, rightSwitch;
 
-int speed = GLOBAL_SPEED;
 int count = 0;
 
 struct Config {
-    String bikeName;
+    String name;
     int    speed;
     int    fade;
     int    brightness;
@@ -52,7 +51,8 @@ void setup() {
     configFile.close();
 
     JsonObject obj      = jsonDoc.as<JsonObject>();
-    config.bikeName     = jsonDoc["bikeName"] | "Darkwad";
+
+    config.name         = jsonDoc["name"] | "Unnamed Project";
     config.speed        = jsonDoc["speed"] | 500;
     config.fade         = jsonDoc["fade"] | 25;
     config.brightness   = jsonDoc["brightness"] | 50;
@@ -60,30 +60,26 @@ void setup() {
     config.num_params   = jsonDoc["num_params"] | 3;
     config.bump_led     = jsonDoc["bump_led"] | 0;
 
-    Serial << "Loading Lights\n";
+    leds = new CRGB[config.num_leds];
+
     if (obj.containsKey("lights")) {
         JsonArray jsonLights = obj["lights"];
+        config.num_lights = jsonLights.size();
         int numLights = jsonLights.size();
+        lights = new Light*[numLights];
         for (int i=0; i<numLights; i++) {
             JsonObject jsonLight    = jsonLights[i];
             Light* newLight         = new Light(&leds[0], jsonLight);
             lights[i] = newLight;
             Serial << "Added " << newLight->getName() << '\n';
         }
-        config.num_lights = jsonLights.size();
     }
 
-    Serial << config.bikeName << " Lighting Up...\n";
-    FastLED.setBrightness(config.brightness);
-    FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, BGR, DATA_RATE_MHZ(24)>(leds, NUM_LEDS);
-    blink();
-    Serial << "It's lit fam!\n";
-    delay(100);
-
-    Serial << "Initializing Controls\n";
     if (obj.containsKey("controls")) {
         JsonArray jsonControls = obj["controls"];
         int numControls = jsonControls.size();
+        config.num_controls = numControls;
+        controls = new Control*[config.num_controls];
         for (int i=0; i<numControls; i++) {
             JsonObject control = jsonControls[i];
             String controlName = control["name"];
@@ -102,12 +98,25 @@ void setup() {
                 controls[i] = newDPad;
             }
         }
-        config.num_controls = numControls;
     }
 
-    Serial << config.num_controls << " Controls Initialized...\n";
+    Serial << "Config Loaded";
 
-    blackout();
+    delay(100);
+
+    Serial << config.name << " Lighting Up...\n";
+
+    FastLED.setBrightness(config.brightness);
+    FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, BGR, DATA_RATE_MHZ(24)>(leds, config.num_leds);
+
+    Serial << "It's lit fam!\n";
+
+    delay(100);
+
+    Serial << "Initializing Controls\n";
+
+
+    Serial << config.num_controls << " Controls Initialized...\n";
 
     Serial << "Starting!\n\n";
     delay(150);
@@ -134,26 +143,5 @@ void loop() {
     FastLED.show();
 
     count++;
-    delay(1000/speed);
-}
-
-// LED FUNCTIONS
-
-void blink() {
-    for (int i=0; i<NUM_LEDS; i++) {
-        leds[i] = CRGB::White;
-    }
-    FastLED.show();
-    delay(25);
-    for (int i=0; i<NUM_LEDS; i++) {
-        leds[i] = CRGB::Black;
-    }
-    FastLED.show();
-}
-
-void blackout() {
-    for (int i=0; i<NUM_LEDS; i++) {
-        leds[i] = CRGB::Black;
-    }
-    FastLED.show();
+    delay(1000/config.speed);
 }
