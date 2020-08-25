@@ -20,7 +20,12 @@ public:
     { };
     DPad(String name, int* pins) :
         Control { name, CTL_DIGITAL, DEFAULT_SAMPLE_RATE }
-    { for (int i=0; i<num_pins; i++) _pins[i] = pins[i]; };
+    {
+        for (int i=0; i<num_pins; i++) {
+            pinMode(pins[i], INPUT);
+            _pins[i] = pins[i];
+        }
+    };
 
     int  getState();
     void update();

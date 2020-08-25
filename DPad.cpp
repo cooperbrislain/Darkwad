@@ -5,7 +5,7 @@ int DPad::getState() {
         int pin = _pins[i];
         int val = digitalRead(pin);
         if (val == HIGH) {
-            return pin+1;
+            return i+1;
         }
     }
     return 0;
@@ -13,6 +13,7 @@ int DPad::getState() {
 
 void DPad::update() {
     int state = this->getState();
+    Serial << state;
     switch (state) {
         case UP:
             Serial << "D-UP";
