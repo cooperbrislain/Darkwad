@@ -49,21 +49,16 @@ void setup() {
 
     if (obj.containsKey("lights")) {
         JsonArray jsonLights = obj["lights"];
-        config.num_lights = jsonLights.size();
-        int numLights = jsonLights.size();
+        int numLights = config.num_lights = jsonLights.size();
         lights = new Light*[numLights];
         for (int i=0; i<numLights; i++) {
-            JsonObject jsonLight    = jsonLights[i];
-            Light* newLight         = new Light(&leds[0], jsonLight);
-            lights[i] = newLight;
-            Serial << "Added " << newLight->getName() << '\n';
+            lights[i] = new Light(&leds[0], jsonLights[i]);
         }
     }
 
     if (obj.containsKey("controls")) {
         JsonArray jsonControls = obj["controls"];
-        int numControls = jsonControls.size();
-        config.num_controls = numControls;
+        int numControls = config.num_controls = jsonControls.size();
         controls = new Control*[config.num_controls];
         for (int i=0; i<numControls; i++) {
             JsonObject control = jsonControls[i];

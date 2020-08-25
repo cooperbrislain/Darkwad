@@ -27,7 +27,7 @@
       "color": "orange",
       "program": "chase",
       "reverse": 1,
-      "params": [5,50,0,0]
+      "params": [5,75,0,0]
     },
     {
       "name": "right",
@@ -36,14 +36,15 @@
       "program": "chase",
       "led_offset": 21,
       "led_count": 5,
-      "params": [5,50,0,0]
+      "params": [5,75,0,0]
     },
     {
       "name": "rear",
-      "speed": 5,
       "leds": [6, 7, 19, 20],
+      "speed": 5,
       "color": "red",
-      "program": "blink"
+      "program": "blink",
+      "params": [1,75,0,0]
     }
   ],
   "controls": [
