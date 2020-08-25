@@ -64,13 +64,56 @@
       "name": "Left",
       "type": "Button",
       "pin": 34,
-      "sampleRate": 10
+      "sampleRate": 10,
+      "press": {
+        "action": "setLightState",
+        "params": {
+          "light": "left",
+          "state": {
+            "program": "chase",
+            "params": [9,75,0,0],
+            "color": "orange"
+          }
+        }
+      },
+      "release": {
+        "action": "setLightState",
+        "params": {
+          "light": "left",
+          "state": {
+            "program": "fadeout",
+            "params": [9, 75, 0, 0]
+          }
+        }
+      }
     },
     {
       "name": "Right",
       "type": "Button",
       "pin": 35,
-      "sampleRate": 10
+      "sampleRate": 10,
+      "press": {
+        "action": "setLightState",
+        "params": {
+          "light": "right",
+          "state": {
+            "program": "chase",
+            "params": [9,75,0,0],
+            "color": "orange"
+          }
+        }
+      },
+      "release": {
+        "action": "setLightState",
+        "params": {
+          "light": "right",
+          "state": {
+            "program": "fadeout",
+            "params": [9,75,0,0],
+            "color": "orange"
+          }
+        }
+      }
     }
   ]
 }

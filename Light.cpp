@@ -128,6 +128,12 @@ const char* Light::getName() {
     return _name.c_str();
 }
 
+void Light::setState(JsonObject jsonState) {
+    if (jsonState["program"]) this->setProgram(jsonState["program"]);
+    if (jsonState["params"]) this->setParams(jsonState["params"]);
+    if (jsonState["color"]) this->setColor(jsonState["color"]);
+}
+
 // programs
 
 int Light::_prog_solid(int x) {

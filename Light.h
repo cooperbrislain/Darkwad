@@ -127,6 +127,7 @@ public:
     void setParam(int p, int v);
     void setParams(int* params);
     void setColor(String colorName);
+    void setState(JsonObject jsonState);
     int  getParam(int p);
     CRGB getRgb();
     CHSV getHsv();

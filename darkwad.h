@@ -20,8 +20,11 @@
 #include "Button.h"
 #include "DPad.h"
 #include "BrakeControl.h"
+#include <map>
 
 #define halt(s) { Serial.println(F( s )); while(1);  }
+
+typedef ControlFn (*actionFn)(JsonObject jsonParams);
 
 struct Config {
     String name;

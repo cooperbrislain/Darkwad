@@ -5,15 +5,15 @@
 #define LED_LEFT lights[2]
 #define LED_RIGHT lights[3]
 
+Config config;
 CRGB* leds;
 Light** lights;
 Control** controls;
-
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-int count = 0;
+std::map<String, actionFn> fnGenerators;
 
-Config config;
+int count = 0;
 
 void setup() {
     Serial.begin(115200);
@@ -22,6 +22,20 @@ void setup() {
         Serial << "SSD1306 allocation failed\n";
         for(;;);
     }
+
+    fnGenerators["setLightState"] = [](JsonObject jsonParams) {
+        String lightName = jsonParams["light"];
+        JsonObject state = jsonParams["state"];
+        Light* light;
+        for (int i=0; i<config.num_lights; i++) {
+            if ((String)lights[i]->getName() == lightName) {
+                light = lights[i];
+            }
+        }
+        ControlFn retFn = [light, state]() { light->setState(state); };
+        return retFn;
+    };
+
     display.display();
     display.clearDisplay();
     display.print("Test");
@@ -66,6 +80,20 @@ void setup() {
             String controlType = control["type"];
             Serial << "[" << controlType << "] " << controlName << '\n';
             if (controlType == "Button") {
+                JsonObject jsonPress    = control["press"];
+                bindAction(controls[i],"press",actionName,params);
+                JsonObject jsonRelease  = control["release"];
+                String actionName       = jsonPress["action"];
+                String lightName        = jsonPress["light"];
+                JsonObject jsonState    = jsonPress["state"];
+//                std::map<std::string, controlFn> fnMap;
+//                  = [light, jsonState]() { light->setLightState(jsonState) };
+//                controlFn newPressFn    = [light, action, state]() {
+//                    if (action == "")
+//                        light->
+//                };
+//                this._pressFn =
+//                }
                 int pin = control["pin"];
                 Button* newButton = new Button(controlName, pin);
                 controls[i] = newButton;
