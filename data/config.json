@@ -51,7 +51,7 @@
     {
       "name": "Button",
       "type": "Button",
-      "pins": [12],
+      "pin": 15,
       "sampleRate": 10
     },
     {
@@ -63,13 +63,13 @@
     {
       "name": "Left",
       "type": "Button",
-      "pins": [34],
+      "pin": 34,
       "sampleRate": 10
     },
     {
       "name": "Right",
       "type": "Button",
-      "pins": [35],
+      "pin": 35,
       "sampleRate": 10
     }
   ]

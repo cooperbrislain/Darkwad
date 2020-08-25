@@ -64,16 +64,17 @@ void setup() {
             JsonObject control = jsonControls[i];
             String controlName = control["name"];
             String controlType = control["type"];
-            JsonArray jsonPins = control["pins"];
-            const int numPins = jsonPins.size();
-            int pins[numPins];
-            for (int j=0; j<numPins; j++) pins[j] = jsonPins[j];
             Serial << "[" << controlType << "] " << controlName << '\n';
             if (controlType == "Button") {
-                Button* newButton = new Button(controlName, pins);
+                int pin = control["pin"];
+                Button* newButton = new Button(controlName, pin);
                 controls[i] = newButton;
             }
             if (controlType == "DPad") {
+                JsonArray jsonPins = control["pins"];
+                const int numPins = jsonPins.size();
+                int pins[numPins];
+                for (int j=0; j<numPins; j++) pins[j] = jsonPins[j];
                 DPad* newDPad = new DPad(controlName, pins);
                 controls[i] = newDPad;
             }

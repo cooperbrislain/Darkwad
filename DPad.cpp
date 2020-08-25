@@ -13,7 +13,6 @@ int DPad::getState() {
 
 void DPad::update() {
     int state = this->getState();
-    Serial << state;
     switch (state) {
         case UP:
             Serial << "D-UP";
