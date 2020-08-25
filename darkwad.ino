@@ -11,22 +11,7 @@ Control** controls;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-BrakeControl brake1;
-Button gripButton, leftSwitch, rightSwitch;
-
 int count = 0;
-
-struct Config {
-    String name;
-    int    speed;
-    int    fade;
-    int    brightness;
-    int    num_leds;
-    int    num_lights;
-    int    num_params;
-    int    bump_led;
-    int    num_controls;
-};
 
 Config config;
 

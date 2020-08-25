@@ -41,7 +41,7 @@ public:
         _count      { 0 },
         _params     { 1, 0, 0, 0 }
     { };
-    Light(String name, CRGB* leds, int offset, int num_leds, int inverse=0) :
+    Light(String name, CRGB* leds, int offset, int num_leds, int reverse=0) :
         _name       { name },
         _num_leds   { num_leds },
         _color      { CRGB::White },
@@ -53,7 +53,7 @@ public:
     {
         _leds = new CRGB*[num_leds];
         for (int i=0; i<num_leds; i++) {
-            _leds[i] = inverse? &leds[offset+num_leds-i-1] : &leds[offset+i];
+            _leds[i] = reverse? &leds[offset+num_leds-i-1] : &leds[offset+i];
         }
     };
     Light(String name, CRGB** leds) :
@@ -92,10 +92,10 @@ public:
         } else if (jsonLight["led_count"]) {
             int led_count   = jsonLight["led_count"];
             int led_offset  = jsonLight["led_offset"];
-            int inverse     = jsonLight["inverse"];
+            int reverse     = jsonLight["reverse"];
             _leds = new CRGB*[led_count];
             for (int i=0; i<led_count; i++) {
-                _leds[i] = inverse? &leds[led_offset+led_count-i-1] : &leds[led_offset+i];
+                _leds[i] = reverse? &leds[led_offset+led_count-i-1] : &leds[led_offset+i];
             }
             _num_leds = led_count;
         } else {

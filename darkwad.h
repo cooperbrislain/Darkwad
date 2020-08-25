@@ -23,4 +23,16 @@
 
 #define halt(s) { Serial.println(F( s )); while(1);  }
 
+struct Config {
+    String name;
+    int    speed;
+    int    fade;
+    int    brightness;
+    int    num_leds;
+    int    num_lights;
+    int    num_params;
+    int    num_controls;
+    int    bump_led;
+};
+
 #endif //DARKWAD_H
