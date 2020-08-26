@@ -15,12 +15,15 @@ int Button::getState() {
 
 void Button::update() {
     int state = this->getState();
+    Serial << this->getName() << ": " << state << "\n";
     if (_state != state) {
         if (++_count>=SAMPLES) {
             if (_state == 0 && state == 1) {
+                Serial << this->getName() << "->onPress" << "\n";
                 this->_onPress(1);
             }
             if (_state == 1 && state == 0) {
+                Serial << this->getName() << "->onRelease" << "\n";
                 this->_onRelease(1);
             }
             _state = state;

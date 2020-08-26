@@ -9,8 +9,8 @@ class Button: public Control {
 
         int                 _state;
         uint8_t             _pin;
-        int                 _pressed;
-        int                 _count;
+        int                 _pressed = 0;
+        int                 _count = 0;
         Action              _onPress;
         Action              _onRelease;
 

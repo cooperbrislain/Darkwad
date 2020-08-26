@@ -61,25 +61,44 @@ void setup() {
             String controlType = control["type"];
             Serial << "[" << controlType << "] " << controlName << '\n';
             if (controlType == "Button") {
-                Light::State state;
-                Light* light;
                 int pin                 = control["pin"];
+                Button* newButton       = new Button(controlName, pin);
                 JsonObject jsonPress    = control["press"];
                 JsonObject jsonRelease  = control["release"];
-                String actionName       = jsonPress["action"];
-                String lightName        = jsonPress["light"];
-                JsonObject jsonState    = jsonPress["state"];
-                state.color             = jsonState["color"] || "white";
-                state.onoff             = jsonState["onoff"] || 0;
-                JsonArray JsonParams    = jsonState["params"];
-                Button* newButton       = new Button(controlName, pin);
-                for (int i=0; i<JsonParams.size(); i++) {
-                    state.params[i] = JsonParams[i];
+                if (jsonPress) {
+                    Light* light;
+                    Light::State state;
+                    String actionName       = jsonPress["action"];
+                    String lightName        = jsonPress["light"];
+                    for (int i=0; i<config.num_lights; i++) {
+                        if ((String)lights[i]->getName() == lightName) light = lights[i];
+                    }
+                    JsonObject jsonState    = jsonPress["state"];
+                    state.color             = jsonState["color"] || "white";
+                    state.onoff             = jsonState["onoff"] || 0;
+                    JsonArray JsonParams    = jsonState["params"];
+                    for (int i=0; i<JsonParams.size(); i++) {
+                        state.params[i] = JsonParams[i];
+                    }
+                    newButton->setPress(Action(actionName, light, state));
                 }
-                for (int i=0; i<config.num_lights; i++) {
-                    if ((String)lights[i]->getName() == lightName) light = lights[i];
+                if (jsonRelease) {
+                    Light* light;
+                    Light::State state;
+                    String actionName       = jsonRelease["action"];
+                    String lightName        = jsonRelease["light"];
+                    for (int i=0; i<config.num_lights; i++) {
+                        if ((String)lights[i]->getName() == lightName) light = lights[i];
+                    }
+                    JsonObject jsonState    = jsonRelease["state"];
+                    state.color             = jsonState["color"] || "white";
+                    state.onoff             = jsonState["onoff"] || 0;
+                    JsonArray JsonParams    = jsonState["params"];
+                    for (int i=0; i<JsonParams.size(); i++) {
+                        state.params[i] = JsonParams[i];
+                    }
+                    newButton->setRelease(Action(actionName, light, state));
                 }
-                newButton->setPress(Action(actionName, light, state));
                 controls[i] = newButton;
 
             }

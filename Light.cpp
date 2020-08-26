@@ -61,10 +61,13 @@ void Light::setHue(int val) {
 }
 
 void Light::setColor(String color) {
+    // TODO: make this a mapping or look to see if there's a function in FastLED
     if (color == "red")     _color = CRGB::Red;
     if (color == "orange")  _color = CRGB::Orange;
     if (color == "blue")    _color = CRGB::Blue;
     if (color == "green")   _color = CRGB::Green;
+    if (color == "black")   _color = CRGB::Black;
+    if (color == "white")   _color = CRGB::White;
 }
 
 void Light::setBrightness(int val) {
@@ -124,24 +127,14 @@ int Light::getParam(int p) {
     return _params[p];
 }
 
-const char* Light::getName() {
-    return _name.c_str();
+String Light::getName() {
+    return _name;
 }
 
 void Light::setState(State state) {
-    Serial << "Setting state for " << _name << ": ";
-    if (state.program) {
-        Serial << "program: " << state.program << " ";
-        this->setProgram(state.program);
-    }
-    if (state.params) {
-        this->setParams(state.params);
-    }
-    if (state.color) {
-        Serial << "color: " << state.color << " ";
-        this->setColor(state.color);
-    }
-    Serial << "\n";
+    if (state.program) this->setProgram(state.program);
+    if (state.params) this->setParams(state.params);
+    if (state.color) this->setColor(state.color);
 }
 
 // programs

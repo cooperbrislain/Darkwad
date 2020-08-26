@@ -24,16 +24,16 @@
       "led_offset": 1,
       "speed": 5,
       "led_count": 5,
-      "color": "orange",
-      "program": "chase",
+      "color": "black",
+      "program": "solid",
       "reverse": 1,
       "params": [9,75,0,0]
     },
     {
       "name": "right",
-      "color": "orange",
+      "color": "black",
+      "program": "solid",
       "speed": 5,
-      "program": "chase",
       "led_offset": 21,
       "led_count": 5,
       "params": [9,75,0,0]

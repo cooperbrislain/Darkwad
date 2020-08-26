@@ -125,7 +125,7 @@ public:
             }
         }
     };
-    const char* getName();
+    String getName();
     void turnOn();
     void turnOff();
     void turn(int onoff);
