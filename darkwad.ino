@@ -1,17 +1,11 @@
 #include "darkwad.h"
 
-#define LED_FRONT lights[1]
-#define LED_REAR lights[4]
-#define LED_LEFT lights[2]
-#define LED_RIGHT lights[3]
+Config      config;
+CRGB*       leds;
+Light**     lights;
+Control**   controls;
 
-Config config;
-CRGB* leds;
-Light** lights;
-Control** controls;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-
-std::map<String, actionFn> fnGenerators;
 
 int count = 0;
 
@@ -22,19 +16,6 @@ void setup() {
         Serial << "SSD1306 allocation failed\n";
         for(;;);
     }
-
-    fnGenerators["setLightState"] = [](JsonObject jsonParams) {
-        String lightName = jsonParams["light"];
-        JsonObject state = jsonParams["state"];
-        Light* light;
-        for (int i=0; i<config.num_lights; i++) {
-            if ((String)lights[i]->getName() == lightName) {
-                light = lights[i];
-            }
-        }
-        ControlFn retFn = [light, state]() { light->setState(state); };
-        return retFn;
-    };
 
     display.display();
     display.clearDisplay();
@@ -80,23 +61,27 @@ void setup() {
             String controlType = control["type"];
             Serial << "[" << controlType << "] " << controlName << '\n';
             if (controlType == "Button") {
+                Light::State state;
+                Light* light;
+                int pin                 = control["pin"];
                 JsonObject jsonPress    = control["press"];
-                bindAction(controls[i],"press",actionName,params);
                 JsonObject jsonRelease  = control["release"];
                 String actionName       = jsonPress["action"];
                 String lightName        = jsonPress["light"];
                 JsonObject jsonState    = jsonPress["state"];
-//                std::map<std::string, controlFn> fnMap;
-//                  = [light, jsonState]() { light->setLightState(jsonState) };
-//                controlFn newPressFn    = [light, action, state]() {
-//                    if (action == "")
-//                        light->
-//                };
-//                this._pressFn =
-//                }
-                int pin = control["pin"];
-                Button* newButton = new Button(controlName, pin);
+                state.color             = jsonState["color"] || "white";
+                state.onoff             = jsonState["onoff"] || 0;
+                JsonArray JsonParams    = jsonState["params"];
+                Button* newButton       = new Button(controlName, pin);
+                for (int i=0; i<JsonParams.size(); i++) {
+                    state.params[i] = JsonParams[i];
+                }
+                for (int i=0; i<config.num_lights; i++) {
+                    if ((String)lights[i]->getName() == lightName) light = lights[i];
+                }
+                newButton->setPress(Action(actionName, light, state));
                 controls[i] = newButton;
+
             }
             if (controlType == "DPad") {
                 JsonArray jsonPins = control["pins"];
@@ -116,7 +101,7 @@ void setup() {
     Serial << config.name << " Lighting Up...\n";
 
     FastLED.setBrightness(config.brightness);
-    FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, BGR, DATA_RATE_MHZ(24)>(leds, config.num_leds);
+    FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, BGR, DATA_RATE_MHZ(24)>(leds, NUM_LEDS);
 
     Serial << "It's lit fam!\n";
 

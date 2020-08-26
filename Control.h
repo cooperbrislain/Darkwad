@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <iostream>
 #include <ArduinoJson.h>
+#include "Action.h"
 
 #define DEFAULT_PINS 4, 0, 2, 15
 #define DEFAULT_SAMPLE_RATE 25
@@ -12,7 +13,6 @@
 
 #define NULF *[](int arg) { }
 
-typedef void(*ControlFn)(int);
 enum ControlType { CTL_DIGITAL, CTL_ANALOG, CTL_TOUCH };
 
 template<class T> inline Print &operator <<(Print &stream, T arg) { stream.print(arg); return stream; }

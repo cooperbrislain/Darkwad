@@ -15,10 +15,7 @@ class BrakeControl: public Control {
         BrakeControl(String name, int* pins) :
             Control { name, CTL_DIGITAL, 25 }
         { for (int i=0; i<num_pins; i++) _pins[i] = pins[i]; };
-        BrakeControl(String name, int* pins,
-            ControlFn pressFn,
-            ControlFn stilldownFn,
-            ControlFn releaseFn) :
+        BrakeControl(String name, int* pins, Action onPress, Action onRelease) :
             Control { name, CTL_DIGITAL, 25 }
         { for (int i=0; i<num_pins; i++) _pins[i] = pins[i]; };
 

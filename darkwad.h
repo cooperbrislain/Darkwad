@@ -3,16 +3,17 @@
 
 #include <Arduino.h>
 
-#include <string.h>
-#include <SPI.h>
+#include <string>
+#include <map>
+#include <iostream>
+
 #include <SPIFFS.h>
+#include <SPI.h>
+#include <Wire.h>
 #include <ArduinoJson.h>
 #include <FastLED.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <Wire.h>
-
-#include <iostream>
 
 #include "config.h"
 
@@ -20,11 +21,11 @@
 #include "Button.h"
 #include "DPad.h"
 #include "BrakeControl.h"
-#include <map>
 
-#define halt(s) { Serial.println(F( s )); while(1);  }
-
-typedef ControlFn (*actionFn)(JsonObject jsonParams);
+#define LED_FRONT lights[1]
+#define LED_REAR lights[4]
+#define LED_LEFT lights[2]
+#define LED_RIGHT lights[3]
 
 struct Config {
     String name;
@@ -37,5 +38,7 @@ struct Config {
     int    num_controls;
     int    bump_led;
 };
+
+#define halt(s) { Serial.println(F( s )); while(1);  }
 
 #endif //DARKWAD_H

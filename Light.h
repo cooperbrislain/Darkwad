@@ -1,3 +1,8 @@
+#ifndef LIGHT_H
+#define LIGHT_H
+
+#define NUM_PARAMS 4
+
 #include <Arduino.h>
 #include <SPI.h>
 #include <FastLED.h>
@@ -31,6 +36,14 @@ private:
     int (Light::*_prog)(int x);
 
 public:
+
+    struct State {
+        String  name;
+        int     params [NUM_PARAMS];
+        String  color;
+        String  program;
+        int     onoff;
+    };
 
     Light() :
         _color      { CRGB::White },
@@ -127,7 +140,7 @@ public:
     void setParam(int p, int v);
     void setParams(int* params);
     void setColor(String colorName);
-    void setState(JsonObject jsonState);
+    void setState(State);
     int  getParam(int p);
     CRGB getRgb();
     CHSV getHsv();
@@ -137,3 +150,5 @@ public:
 
 uint8_t nblendU8TowardU8(uint8_t cur, const uint8_t target, uint8_t x);
 CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x);
+
+#endif // LIGHT_H
