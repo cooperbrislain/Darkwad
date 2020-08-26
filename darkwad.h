@@ -34,8 +34,8 @@ struct Config {
     int    brightness;
     int    num_leds;
     int    num_lights;
-    int    num_params;
     int    num_controls;
+    int    num_params;
     int    bump_led;
 };
 

@@ -80,7 +80,7 @@ void setup() {
                     for (int i=0; i<JsonParams.size(); i++) {
                         state.params[i] = JsonParams[i];
                     }
-                    newButton->setPress(Action(actionName, light, state));
+                    newButton->setPress(new Action(actionName, light, state));
                 }
                 if (jsonRelease) {
                     Light* light;
@@ -113,25 +113,20 @@ void setup() {
         }
     }
 
-    Serial << "Config Loaded";
-
+    Serial << "Config Loaded: \n";
+    Serial << "Lights (" << config.num_lights << ") \n";
+    for (int i=0; i<config.num_lights; i++)
+        Serial << "   " << lights[i]->getName() << "\n";
+    Serial << "Controls (" << config.num_controls << ") \n";
+    for (int i=0; i<config.num_controls; i++)
+        Serial << "   " << controls[i]->getName() << " (" << controls[i]->getType() << ")\n";
+    Serial << "\n";
     delay(100);
-
-    Serial << config.name << " Lighting Up...\n";
 
     FastLED.setBrightness(config.brightness);
     FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, BGR, DATA_RATE_MHZ(24)>(leds, NUM_LEDS);
 
     Serial << "It's lit fam!\n";
-
-    delay(100);
-
-    Serial << "Initializing Controls\n";
-
-
-    Serial << config.num_controls << " Controls Initialized...\n";
-
-    Serial << "Starting!\n\n";
     delay(150);
 }
 
