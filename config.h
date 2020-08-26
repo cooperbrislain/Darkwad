@@ -10,9 +10,6 @@
 #define IS_ESP32
 #define IS_APA102
 
-#define CTL_TOUCH_THRESHOLD 20
-#define CTL_SAMPLE_RATE 5
-
 #define OLED_DATA_PIN 36
 #define OLED_CLOCK_PIN 39
 #define SCREEN_WIDTH 128

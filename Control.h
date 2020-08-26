@@ -5,6 +5,7 @@
 #include <iostream>
 #include <ArduinoJson.h>
 #include "Action.h"
+#include "StreamPrint.h"
 
 #define DEFAULT_PINS 4, 0, 2, 15
 #define DEFAULT_SAMPLE_RATE 25
@@ -14,8 +15,6 @@
 #define NULF *[](int arg) { }
 
 enum ControlType { CTL_DIGITAL, CTL_ANALOG, CTL_TOUCH };
-
-template<class T> inline Print &operator <<(Print &stream, T arg) { stream.print(arg); return stream; }
 
 class Control {
 protected:
@@ -30,7 +29,7 @@ public:
     Control() :
         _name       { "Control" },
         _type       { CTL_DIGITAL },
-        _sampleRate { CTL_SAMPLE_RATE }
+        _sampleRate { DEFAULT_SAMPLE_RATE }
     { };
     Control(String name, ControlType type, int sampleRate) :
         _name       { name },

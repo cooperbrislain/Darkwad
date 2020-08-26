@@ -9,6 +9,7 @@
 #include "config.h"
 #include <iostream>
 #include <ArduinoJson.h>
+#include "StreamPrint.h"
 
 class Light {
 private:

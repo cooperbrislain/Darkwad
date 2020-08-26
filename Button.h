@@ -17,19 +17,19 @@ class Button: public Control {
     public:
 
         Button() :
-            Control { "Button", CTL_DIGITAL, CTL_SAMPLE_RATE }
+            Control { "Button", CTL_DIGITAL, DEFAULT_SAMPLE_RATE }
         { };
         Button(String name, int pin, Action onPress, Action onRelease) :
-            Control         { name, CTL_DIGITAL, CTL_SAMPLE_RATE },
-            _pin            { pin },
-            _onPress        { onPress },
-            _onRelease      { onRelease }
+            Control         { name, CTL_DIGITAL, DEFAULT_SAMPLE_RATE },
+            _pin            ( pin ),
+            _onPress        ( onPress ),
+            _onRelease      ( onRelease )
         {
             pinMode(_pin, INPUT);
         };
         Button(String name, int pin) :
-            Control         { name, CTL_DIGITAL, CTL_SAMPLE_RATE },
-            _pin            { pin }
+            Control         { name, CTL_DIGITAL, DEFAULT_SAMPLE_RATE },
+            _pin            ( pin )
         {
             pinMode(_pin, INPUT);
         };

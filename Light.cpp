@@ -129,9 +129,19 @@ const char* Light::getName() {
 }
 
 void Light::setState(State state) {
-    if (state.program)  this->setProgram(state.program);
-    if (state.params)   this->setParams(state.params);
-    if (state.color)    this->setColor(state.color);
+    Serial << "Setting state for " << _name << ": ";
+    if (state.program) {
+        Serial << "program: " << state.program << " ";
+        this->setProgram(state.program);
+    }
+    if (state.params) {
+        this->setParams(state.params);
+    }
+    if (state.color) {
+        Serial << "color: " << state.color << " ";
+        this->setColor(state.color);
+    }
+    Serial << "\n";
 }
 
 // programs
