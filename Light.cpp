@@ -5,55 +5,12 @@ void Light::update() {
     _count++;
 }
 
-void Light::turnOn() {
-    #ifdef FADE
-        _prog = &Light::_prog_fadein;
-        _params[1] = FADE;
-    #endif
-    _onoff = 1;
-    update();
-}
+void Light::turnOn() { _onoff = 1; }
+void Light::turnOff() { _onoff = 0; }
+void Light::turn(int onoff) { _onoff = onoff; }
+void Light::toggle() { _onoff = (_onoff==1? 0 : 1); }
 
-void Light::turnOff() {
-    if(_onoff) {
-        #ifdef FADE
-            _prog = &Light::_prog_fadeout;
-            _params[1] = FADE;
-        #else
-            _onoff = 0;
-        #endif
-        update();
-    }
-}
-
-void Light::turn(int onoff) {
-    _onoff = onoff;
-}
-
-void Light::blink() {
-    for (int i=0; i<_num_leds; i++) {
-        *(CRGB*)_leds[i] = CRGB::White;
-    }
-    update();
-    delay(25);
-    for (int i=0; i<_num_leds; i++) {
-        *(CRGB*)_leds[i] = CRGB::Black;
-    }
-    update();
-}
-
-void Light::toggle() {
-    if (_onoff) {
-        turnOff();
-    } else {
-        turnOn();
-    }
-}
-
-void Light::setRgb(CRGB color) {
-    _color = color;
-}
-
+void Light::setRgb(CRGB color) { _color = color; }
 void Light::setHue(int val) {
     CHSV hsv_color = getHsv();
     hsv_color.h = val;
@@ -132,9 +89,21 @@ String Light::getName() {
 }
 
 void Light::setState(State state) {
-    if (state.program) this->setProgram(state.program);
-    if (state.params) this->setParams(state.params);
-    if (state.color) this->setColor(state.color);
+    this->setProgram(state.program);
+    this->setParams(state.params);
+    this->setColor(state.color);
+}
+
+void Light::blink() {
+    for (int i=0; i<_num_leds; i++) {
+        *(CRGB*)_leds[i] = CRGB::White;
+    }
+    update();
+    delay(25);
+    for (int i=0; i<_num_leds; i++) {
+        *(CRGB*)_leds[i] = CRGB::Black;
+    }
+    update();
 }
 
 // programs
