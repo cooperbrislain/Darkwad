@@ -5,17 +5,19 @@ void Light::update() {
     _count++;
 }
 
+CHSV Light::getHsv() { return rgb2hsv_approximate(_color); }
+CRGB Light::getRgb() { return _color; }
+int  Light::getParam(int p) { return _params[p]; }
+String Light::getName() { return _name; }
+
 void Light::turnOn() { _onoff = 1; }
 void Light::turnOff() { _onoff = 0; }
 void Light::turn(int onoff) { _onoff = onoff; }
 void Light::toggle() { _onoff = (_onoff==1? 0 : 1); }
 
 void Light::setRgb(CRGB color) { _color = color; }
-void Light::setHue(int val) {
-    CHSV hsv_color = getHsv();
-    hsv_color.h = val;
-    setHsv(hsv_color);
-}
+void Light::setHsv(int hue, int sat, int val) { _color = CHSV(hue, sat, val); }
+void Light::setHsv(CHSV color) { _color = color; }
 
 void Light::setColor(String color) {
     // TODO: make this a mapping or look to see if there's a function in FastLED
@@ -27,9 +29,9 @@ void Light::setColor(String color) {
     if (color == "white")   _color = CRGB::White;
 }
 
-void Light::setBrightness(int val) {
+void Light::setHue(int val) {
     CHSV hsv_color = getHsv();
-    hsv_color.v = min(val, 100);
+    hsv_color.h = val;
     setHsv(hsv_color);
 }
 
@@ -39,20 +41,10 @@ void Light::setSaturation(int val) {
     setHsv(hsv_color);
 }
 
-void Light::setHsv(int hue, int sat, int val) {
-    _color = CHSV(hue, sat, val);
-}
-
-void Light::setHsv(CHSV color) {
-    _color = color;
-}
-
-CHSV Light::getHsv() {
-    return rgb2hsv_approximate(_color);
-}
-
-CRGB Light::getRgb() {
-    return _color;
+void Light::setBrightness(int val) {
+    CHSV hsv_color = getHsv();
+    hsv_color.v = min(val, 100);
+    setHsv(hsv_color);
 }
 
 void Light::setProgram(String progName) {
@@ -80,18 +72,10 @@ void Light::setParam(int p, int v) {
     _params[p] = v;
 }
 
-int Light::getParam(int p) {
-    return _params[p];
-}
-
-String Light::getName() {
-    return _name;
-}
-
 void Light::setState(State state) {
-    this->setProgram(state.program);
-    this->setParams(state.params);
-    this->setColor(state.color);
+    setProgram(state.program);
+    setParams(state.params);
+    setColor(state.color);
 }
 
 void Light::blink() {

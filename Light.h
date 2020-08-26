@@ -115,8 +115,8 @@ public:
         } else {
             // bad
         }
-        if (jsonLight["program"])   this->setProgram(jsonLight["program"]);
-        if (jsonLight["color"])     this->setColor(jsonLight["color"]);
+        if (jsonLight["program"])   setProgram(jsonLight["program"]);
+        if (jsonLight["color"])     setColor(jsonLight["color"]);
         if (jsonLight["params"]) {
             JsonArray jsonParams = jsonLight["params"];
             int numParams = jsonParams.size();
