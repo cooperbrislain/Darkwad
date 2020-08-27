@@ -25,7 +25,7 @@ void setup() {
 
     Serial << "Loading configuration...\n";
     SPIFFS.begin(true);
-    StaticJsonDocument<2048> jsonDoc;
+    StaticJsonDocument<4096> jsonDoc;
     File configFile = SPIFFS.open("/config.json", FILE_READ);
     deserializeJson(jsonDoc, configFile);
     configFile.close();
