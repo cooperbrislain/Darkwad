@@ -101,16 +101,23 @@
           "color": "orange"
         }
       },
-      "release": {
-        "action": "rightBlinkerOff",
-        "light": "right",
-        "state": {
-          "onoff": "off",
-          "program": "solid",
-          "color": "black",
-          "params": [9,75,0,0]
-        }
-      }
+      "release": "rightBlinkerOff"
+    }
+  ],
+  "actions": [
+    {
+      "name": "rightBlinkerOff",
+      "light": "right",
+      "state": "off"
+    }
+  ],
+  "states": [
+    {
+      "name": "off",
+      "onoff": "off",
+      "program": "solid",
+      "color": "black",
+      "params": [100,75,0,0]
     }
   ]
 }
