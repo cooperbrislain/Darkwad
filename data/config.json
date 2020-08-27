@@ -66,24 +66,20 @@
       "pin": 34,
       "sampleRate": 10,
       "press": {
-        "action": "leftBlinkerOn",
-        "params": {
-          "light": "left",
-          "state": {
-            "program": "chase",
-            "params": [9,75,0,0],
-            "color": "orange"
-          }
+        "action": "leftBlinkerOn"
+        "light": "left",
+        "state": {
+          "program": "chase",
+          "params": [9,75,0,0],
+          "color": "orange"
         }
       },
       "release": {
         "action": "leftBlinkerOff",
-        "params": {
-          "light": "left",
-          "state": {
-            "program": "fadeout",
-            "params": [9, 75, 0, 0]
-          }
+        "light": "left",
+        "state": {
+          "program": "fadeout",
+          "params": [9, 75, 0, 0]
         }
       }
     },
@@ -94,24 +90,20 @@
       "sampleRate": 10,
       "press": {
         "action": "rightBlinkerOn",
-        "params": {
-          "light": "right",
-          "state": {
-            "program": "chase",
-            "params": [9,75,0,0],
-            "color": "orange"
-          }
+        "light": "right",
+        "state": {
+          "program": "chase",
+          "params": [9, 75, 0, 0],
+          "color": "orange"
         }
       },
       "release": {
         "action": "rightBlinkerOff",
-        "params": {
-          "light": "right",
-          "state": {
-            "program": "fadeout",
-            "params": [9,75,0,0],
-            "color": "orange"
-          }
+        "light": "right",
+        "state": {
+          "program": "fadeout",
+          "params": [9,75,0,0],
+          "color": "orange"
         }
       }
     }

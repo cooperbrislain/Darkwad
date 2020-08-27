@@ -66,6 +66,7 @@ void setup() {
                 JsonObject jsonPress    = control["press"];
                 JsonObject jsonRelease  = control["release"];
                 if (jsonPress) {
+                    Serial << "Binding onPress Action...\n";
                     Light* light;
                     Light::State state;
                     String actionName       = jsonPress["action"];
@@ -84,6 +85,7 @@ void setup() {
                     newButton->setPress(newAction);
                 }
                 if (jsonRelease) {
+                    Serial << "Binding onRelease Action...\n";
                     Light* light;
                     Light::State state;
                     String actionName       = jsonRelease["action"];
@@ -102,7 +104,7 @@ void setup() {
                     newButton->setRelease(newAction);
                 }
                 controls[i] = newButton;
-
+                Serial << "New Button Added.\n";
             }
             if (controlType == "DPad") {
                 JsonArray jsonPins = control["pins"];
