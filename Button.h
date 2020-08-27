@@ -11,15 +11,15 @@ class Button: public Control {
         uint8_t             _pin;
         int                 _pressed = 0;
         int                 _count = 0;
-        Action              _onPress;
-        Action              _onRelease;
+        Action*             _onPress;
+        Action*             _onRelease;
 
     public:
 
         Button() :
             Control { "Button", CTL_DIGITAL, DEFAULT_SAMPLE_RATE }
         { };
-        Button(String name, int pin, Action onPress, Action onRelease) :
+        Button(String name, int pin, Action* onPress, Action* onRelease) :
             Control         { name, CTL_DIGITAL, DEFAULT_SAMPLE_RATE },
             _pin            ( pin ),
             _onPress        ( onPress ),
@@ -36,7 +36,7 @@ class Button: public Control {
         int  getState();
         void update();
 
-        void setPress(Action onPress);
-        void setRelease(Action onRelease);
+        void setPress(Action* onPress);
+        void setRelease(Action* onRelease);
 
 };

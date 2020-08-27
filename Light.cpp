@@ -73,9 +73,13 @@ void Light::setParam(int p, int v) {
 }
 
 void Light::setState(State state) {
-    setProgram(state.program);
-    setParams(state.params);
-    setColor(state.color);
+    try {
+        setProgram(state.program);
+//        setParams(state.params);
+        setColor(state.color);
+    } catch (int e) {
+        Serial << "An Exception occurred: " << e << "\n";
+    }
 }
 
 void Light::blink() {

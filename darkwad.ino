@@ -80,7 +80,8 @@ void setup() {
                     for (int i=0; i<JsonParams.size(); i++) {
                         state.params[i] = JsonParams[i];
                     }
-                    newButton->setPress(new Action(actionName, light, state));
+                    Action* newAction = new Action(actionName, light, state);
+                    newButton->setPress(newAction);
                 }
                 if (jsonRelease) {
                     Light* light;
@@ -97,7 +98,8 @@ void setup() {
                     for (int i=0; i<JsonParams.size(); i++) {
                         state.params[i] = JsonParams[i];
                     }
-                    newButton->setRelease(Action(actionName, light, state));
+                    Action* newAction = new Action(actionName, light, state);
+                    newButton->setRelease(newAction);
                 }
                 controls[i] = newButton;
 
