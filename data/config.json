@@ -64,9 +64,9 @@
       "name": "Left",
       "type": "Button",
       "pin": 34,
-      "sampleRate": 10,
+      "sampleRate": 5,
       "press": {
-        "action": "leftBlinkerOn"
+        "action": "leftBlinkerOn",
         "light": "left",
         "state": {
           "program": "chase",
