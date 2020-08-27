@@ -75,11 +75,12 @@ void setup() {
                         if ((String)lights[i]->getName() == lightName) light = lights[i];
                     }
                     JsonObject jsonState    = jsonPress["state"];
-                    state.color             = jsonState["color"] || "white";
-                    state.onoff             = jsonState["onoff"] || 0;
+                    state.color             = jsonState["color"].as<String>();
+                    state.onoff             = jsonState["onoff"].as<int>();
+                    state.program           = jsonState["program"].as<String>();
                     JsonArray JsonParams    = jsonState["params"];
                     for (int i=0; i<JsonParams.size(); i++) {
-                        state.params[i] = JsonParams[i];
+                        state.params[i] = JsonParams[i].as<int>();
                     }
                     Action* newAction = new Action(actionName, light, state);
                     newButton->setPress(newAction);
@@ -94,8 +95,8 @@ void setup() {
                         if ((String)lights[i]->getName() == lightName) light = lights[i];
                     }
                     JsonObject jsonState    = jsonRelease["state"];
-                    state.color             = jsonState["color"] || "white";
-                    state.onoff             = jsonState["onoff"] || 0;
+                    state.color             = jsonState["color"].as<String>();
+                    state.onoff             = jsonState["onoff"].as<int>();
                     JsonArray JsonParams    = jsonState["params"];
                     for (int i=0; i<JsonParams.size(); i++) {
                         state.params[i] = JsonParams[i];

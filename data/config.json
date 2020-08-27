@@ -2,7 +2,7 @@
   "name": "Darkwad",
   "num_leds": 101,
   "bump_led": 1,
-  "speed": 100,
+  "speed": 250,
   "lights": [
     {
       "name": "bump",
@@ -64,11 +64,12 @@
       "name": "Left",
       "type": "Button",
       "pin": 34,
-      "sampleRate": 5,
+      "sampleRate": 2,
       "press": {
         "action": "leftBlinkerOn",
         "light": "left",
         "state": {
+          "onoff": "on",
           "program": "chase",
           "params": [9,75,0,0],
           "color": "orange"
@@ -78,7 +79,9 @@
         "action": "leftBlinkerOff",
         "light": "left",
         "state": {
-          "program": "fadeout",
+          "onoff": "off",
+          "program": "solid",
+          "color": "black",
           "params": [9, 75, 0, 0]
         }
       }
@@ -87,11 +90,12 @@
       "name": "Right",
       "type": "Button",
       "pin": 35,
-      "sampleRate": 10,
+      "sampleRate": 2,
       "press": {
         "action": "rightBlinkerOn",
         "light": "right",
         "state": {
+          "onoff": "on",
           "program": "chase",
           "params": [9, 75, 0, 0],
           "color": "orange"
@@ -101,9 +105,10 @@
         "action": "rightBlinkerOff",
         "light": "right",
         "state": {
-          "program": "fadeout",
-          "params": [9,75,0,0],
-          "color": "orange"
+          "onoff": "off",
+          "program": "solid",
+          "color": "black",
+          "params": [9,75,0,0]
         }
       }
     }
