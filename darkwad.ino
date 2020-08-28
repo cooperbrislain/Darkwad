@@ -159,6 +159,8 @@ Light::State* stateFromJson(JsonObject jsonState) {
 }
 
 Action* actionFromJson(JsonObject jsonAction) {
+    Serial << "Loading Action from JSON...\n";
+    Serial << jsonAction << '\n';
     String actionName = jsonAction["name"];
     String lightName = jsonAction["light"];
     String stateName = jsonAction["state"];
@@ -166,5 +168,6 @@ Action* actionFromJson(JsonObject jsonAction) {
     Light::State* state = states[stateName];
     Serial << light->getName() << " " << state->name << "\n";
     Action* action = new Action(actionName, light, state);
+    Serial << action->getName() << " created.";
     return action;
 }
