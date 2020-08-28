@@ -164,5 +164,7 @@ Action* actionFromJson(JsonObject jsonAction) {
     String stateName = jsonAction["state"];
     Light* light = lightMap[lightName];
     Light::State* state = states[stateName];
-    return new Action(actionName, light, state);
+    Serial << light->getName() << " " << state->name << "\n";
+    Action* action = new Action(actionName, light, state);
+    return action;
 }

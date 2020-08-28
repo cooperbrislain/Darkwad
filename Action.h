@@ -11,10 +11,10 @@ class Action {
     private:
         String          _name;
         Light*          _light;
-        Light::State    _state;
+        Light::State*   _state;
     public:
         Action() { };
-        Action (String name, Light* light, Light::State state) :
+        Action (String name, Light* light, Light::State* state) :
             _name (name),
             _light (light),
             _state (state)
