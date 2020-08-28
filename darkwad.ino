@@ -45,6 +45,16 @@ void setup() {
 
     leds = new CRGB[config.num_leds];
 
+    if (obj.containsKey("states")) {
+        JsonArray jsonStates = obj["states"];
+        int numStates = jsonStates.size();
+        for (int i=0; i<numStates; i++) {
+            JsonObject jsonState = jsonStates[i];
+            Light::State* state = stateFromJson(jsonState);
+            states[state->name] = state;
+        }
+    }
+
     if (obj.containsKey("lights")) {
         JsonArray jsonLights = obj["lights"];
         int numLights = config.num_lights = jsonLights.size();
@@ -61,16 +71,6 @@ void setup() {
         for (int i=0; i<numActions; i++) {
             Action* newAction = actionFromJson(jsonActions[i].as<JsonObject>());
             actions[newAction->getName()] = newAction;
-        }
-    }
-
-    if (obj.containsKey("states")) {
-        JsonArray jsonStates = obj["states"];
-        int numStates = jsonStates.size();
-        for (int i=0; i<numStates; i++) {
-            JsonObject jsonState = jsonStates[i];
-            Light::State* state = stateFromJson(jsonState);
-            states[state->name] = state;
         }
     }
 
@@ -160,7 +160,6 @@ Light::State* stateFromJson(JsonObject jsonState) {
 
 Action* actionFromJson(JsonObject jsonAction) {
     Serial << "Loading Action from JSON...\n";
-    Serial << jsonAction << '\n';
     String actionName = jsonAction["name"];
     String lightName = jsonAction["light"];
     String stateName = jsonAction["state"];
@@ -168,6 +167,6 @@ Action* actionFromJson(JsonObject jsonAction) {
     Light::State* state = states[stateName];
     Serial << light->getName() << " " << state->name << "\n";
     Action* action = new Action(actionName, light, state);
-    Serial << action->getName() << " created.";
+    Serial << action->getName() << " created.\n";
     return action;
 }
