@@ -68,7 +68,7 @@ void setup() {
         for (int i=0; i<numStates; i++) {
             JsonObject jsonState = jsonStates[i];
             Light::State* state = stateFromJson(jsonState);
-            states[state.name] = state;
+            states[state->name] = state;
         }
     }
 
@@ -84,52 +84,8 @@ void setup() {
             if (controlType == "Button") {
                 int pin                 = control["pin"];
                 Button* newButton       = new Button(controlName, pin);
-                JsonObject jsonPress    = control["press"];
-                JsonObject jsonRelease  = control["release"];
-                if (jsonPress) {
-                    Serial << "Binding onPress Action...\n";
-                    Light* light;
-                    Light::State state;
-                    String actionName       = jsonPress["action"];
-                    String lightName        = jsonPress["light"];
-                    for (int i=0; i<config.num_lights; i++) {
-                        if ((String)lights[i]->getName() == lightName) light = lights[i];
-                    }
-                    JsonObject jsonState    = jsonPress["state"];
-                    state.color             = jsonState["color"].as<String>();
-                    state.onoff             = jsonState["onoff"].as<int>();
-                    state.program           = jsonState["program"].as<String>();
-                    if (jsonArray jsonParams = jsonState["params"]) {
-                        int numParams =         = jsonState["params"].size();
-                        int *params = new int[numParams];
-                        for (int j=0; j<numParams; j++) {
-                            params[j] = jsonParams[j];
-                        }
-                        int params
-                        state.params = params;
-                    }
-                    Action* newAction = new Action(actionName, light, state);
-                    newButton->setPress(newAction);
-                }
-                if (jsonRelease) {
-                    Serial << "Binding onRelease Action...\n";
-                    Light* light;
-                    Light::State state;
-                    String actionName       = jsonRelease["action"];
-                    String lightName        = jsonRelease["light"];
-                    for (int i=0; i<config.num_lights; i++) {
-                        if ((String)lights[i]->getName() == lightName) light = lights[i];
-                    }
-                    JsonObject jsonState    = jsonRelease["state"];
-                    state.color             = jsonState["color"].as<String>();
-                    state.onoff             = jsonState["onoff"].as<int>();
-                    JsonArray JsonParams    = jsonState["params"];
-                    for (int i=0; i<JsonParams.size(); i++) {
-                        state.params[i] = JsonParams[i];
-                    }
-                    Action* newAction = new Action(actionName, light, state);
-                    newButton->setRelease(newAction);
-                }
+                if (control["press"]) newButton->setPress(control["press"]);
+                if (contriol["release"]) newButton->setRelease(contriol["release"]);
                 controls[i] = newButton;
                 Serial << "New Button Added.\n";
             }
