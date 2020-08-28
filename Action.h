@@ -19,17 +19,6 @@ class Action {
             _light (light),
             _state (state)
         { Serial << "Created Action: " << _name << '\n'; }
-        Action (JsonObject jsonAction) :
-        {
-            Serial << "Binding action...\n";
-            Light* light;
-            Light::State state;
-            String actionName jsonAction["name"];
-            String lightName jsonAction["light"];
-            for (int i=0; i<config.num_lights; i++) {
-                if ((String)lights[i]->getName() == lightName) light = lights[i];
-            }
-        }
         void operator () (int x) {
             Serial << _name << '\n';
             _light->setState(_state);

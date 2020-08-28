@@ -4,8 +4,8 @@ Config          config;
 CRGB*           leds;
 Light**         lights;
 Control**       controls;
-Action**        actions;
-Light::State**  states;
+std::map<String, Action*> actions;
+std::map<String, Light::State*> states;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -55,10 +55,10 @@ void setup() {
 
     if (obj.containsKey("actions")) {
         JsonArray jsonActions = obj["actions"];
-        int numActions = config.num_actions = jsonActions.size();
-        actions = new Action*[numActions];
+        int numActions = jsonActions.size();
         for (int i=0; i<numActions; i++) {
-            actions[i] = new Action(jsonActions[i]);
+            Action* newAction = actionFromJson(jsonActions[i].as<JsonObject>());
+            actions[newAction.getName()] = newAction;
         }
     }
 
@@ -68,18 +68,7 @@ void setup() {
         states = new Light::State*[numStates];
         for (int i=0; i<numStates; i++) {
             JsonObject jsonState    = jsonStates[i];
-            states[i].color             = jsonState["color"].as<String>();
-            states[i].onoff             = jsonState["onoff"].as<int>();
-            states[i].program           = jsonState["program"].as<String>();
-            if (jsonArray jsonParams = jsonState["params"]) {
-                int numParams =         = jsonState["params"].size();
-                int *params = new int[numParams];
-                for (int j=0; j<numParams; j++) {
-                    params[j] = jsonParams[j];
-                }
-                int params
-                states[i].params = params;
-            }
+            states[i] = stateFromJson(jsonState);
         }
     }
 
@@ -194,4 +183,32 @@ void loop() {
 
     count++;
     delay(1000/config.speed);
+}
+
+Light::State* stateFromJson(JsonObject jsonState) {
+    Light::State* state = new Light::State;
+    if (jsonState["color"]) state.color = jsonState["color"].as<String>();
+    if (jsonState["onoff"]) state.onoff = jsonState["onoff"].as<int>();
+    if (jsonState["program"]) state.program = jsonState["program"].as<String>();
+    if (jsonArray jsonParams = jsonState["params"]) {
+        int numParams = jsonState["params"].size();
+        int *params = new int[numParams];
+        for (int j=0; j<numParams; j++) {
+            params[j] = jsonParams[j];
+        }
+        state.params = params;
+    }
+    return state;
+}
+
+Action* actionFromJson(JsonObject jsonAction) {
+    String actionName = jsonAction["name"];
+    String lightName = jsonAction["light"];
+    String stateName = jsonAction["state"];
+    Light* light;
+    Light::State* state = states[stateName];
+    for (int i=0; i<config.num_lights; i++) {
+        if ((String)lights[i]->getName() == lightName) light = lights[i];
+    }
+    return new Action(light, state);
 }

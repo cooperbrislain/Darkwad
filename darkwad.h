@@ -41,4 +41,6 @@ struct Config {
 
 #define halt(s) { Serial.println(F( s )); while(1);  }
 
+Light::State stateFromJson(JsonObject jsonState);
+
 #endif //DARKWAD_H
