@@ -58,17 +58,17 @@ void setup() {
         int numActions = jsonActions.size();
         for (int i=0; i<numActions; i++) {
             Action* newAction = actionFromJson(jsonActions[i].as<JsonObject>());
-            actions[newAction.getName()] = newAction;
+            actions[newAction->getName()] = newAction;
         }
     }
 
     if (obj.containsKey("states")) {
         JsonArray jsonStates = obj["states"];
-        int numStates = config.num_states = jsonStates.size();
-        states = new Light::State*[numStates];
+        int numStates = jsonStates.size();
         for (int i=0; i<numStates; i++) {
-            JsonObject jsonState    = jsonStates[i];
-            states[i] = stateFromJson(jsonState);
+            JsonObject jsonState = jsonStates[i];
+            Light::State* state = stateFromJson(jsonState);
+            states[state.name] = state;
         }
     }
 
