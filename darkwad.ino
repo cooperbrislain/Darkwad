@@ -1,9 +1,11 @@
 #include "darkwad.h"
 
-Config      config;
-CRGB*       leds;
-Light**     lights;
-Control**   controls;
+Config          config;
+CRGB*           leds;
+Light**         lights;
+Control**       controls;
+Action**        actions;
+Light::State**  states;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -51,6 +53,36 @@ void setup() {
         }
     }
 
+    if (obj.containsKey("actions")) {
+        JsonArray jsonActions = obj["actions"];
+        int numActions = config.num_actions = jsonActions.size();
+        actions = new Action*[numActions];
+        for (int i=0; i<numActions; i++) {
+            actions[i] = new Action(jsonActions[i]);
+        }
+    }
+
+    if (obj.containsKey("states")) {
+        JsonArray jsonStates = obj["states"];
+        int numStates = config.num_states = jsonStates.size();
+        states = new Light::State*[numStates];
+        for (int i=0; i<numStates; i++) {
+            JsonObject jsonState    = jsonStates[i];
+            states[i].color             = jsonState["color"].as<String>();
+            states[i].onoff             = jsonState["onoff"].as<int>();
+            states[i].program           = jsonState["program"].as<String>();
+            if (jsonArray jsonParams = jsonState["params"]) {
+                int numParams =         = jsonState["params"].size();
+                int *params = new int[numParams];
+                for (int j=0; j<numParams; j++) {
+                    params[j] = jsonParams[j];
+                }
+                int params
+                states[i].params = params;
+            }
+        }
+    }
+
     if (obj.containsKey("controls")) {
         JsonArray jsonControls = obj["controls"];
         int numControls = config.num_controls = jsonControls.size();
@@ -78,9 +110,14 @@ void setup() {
                     state.color             = jsonState["color"].as<String>();
                     state.onoff             = jsonState["onoff"].as<int>();
                     state.program           = jsonState["program"].as<String>();
-                    JsonArray JsonParams    = jsonState["params"];
-                    for (int i=0; i<JsonParams.size(); i++) {
-                        state.params[i] = JsonParams[i].as<int>();
+                    if (jsonArray jsonParams = jsonState["params"]) {
+                        int numParams =         = jsonState["params"].size();
+                        int *params = new int[numParams];
+                        for (int j=0; j<numParams; j++) {
+                            params[j] = jsonParams[j];
+                        }
+                        int params
+                        state.params = params;
                     }
                     Action* newAction = new Action(actionName, light, state);
                     newButton->setPress(newAction);

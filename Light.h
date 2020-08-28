@@ -12,9 +12,21 @@
 #include "StreamPrint.h"
 
 class Light {
+public:
+
+    struct State {
+        String  name;
+        int*    params;
+        String  color;
+        String  program;
+        int     onoff = -1;
+        int     count = -1;
+    };
+
 private:
 
     CRGB** _leds;
+    State _state;
     CRGB _color;
     int _params [NUM_PARAMS];
     int _num_leds;
@@ -37,14 +49,6 @@ private:
     int (Light::*_prog)(int x);
 
 public:
-
-    struct State {
-        String  name;
-        int     params [NUM_PARAMS];
-        String  color;
-        String  program;
-        int     onoff;
-    };
 
     Light() :
         _color      { CRGB::White },
