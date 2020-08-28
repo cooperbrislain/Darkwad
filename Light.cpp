@@ -76,7 +76,7 @@ void Light::setState(State* state) {
     try {
         Serial << "Setting light state: " << "[" << state->name << ": ";
         if (state->onoff != -1) {
-            Serial << (state->onoff? "On" : "Off") << "|";
+            Serial << (state->onoff==1? "On" : "Off") << "|";
             turn(state->onoff);
         }
         if (state->program != "") {

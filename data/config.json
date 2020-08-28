@@ -81,7 +81,7 @@
     {
       "name": "leftBlinkerOn",
       "light": "left",
-      "state": "on"
+      "state": "turn_signal_on"
     },
     {
       "name": "leftBlinkerOff",
@@ -91,7 +91,7 @@
     {
       "name": "rightBlinkerOn",
       "light": "right",
-      "state": "on"
+      "state": "turn_signal_on"
     },
     {
       "name": "rightBlinkerOff",
@@ -102,11 +102,18 @@
   "states": [
     {
       "name": "off",
-      "onoff": 0
+      "onoff": 0,
+      "color": "black"
     },
     {
       "name": "on",
       "onoff": 1
+    },
+    {
+      "name": "turn_signal_on",
+      "onoff": 1,
+      "color": "orange",
+      "program": "chase"
     }
   ]
 }

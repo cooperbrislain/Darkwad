@@ -150,7 +150,7 @@ Light::State* stateFromJson(JsonObject jsonState) {
         state->color = jsonState["color"].as<String>();
         Serial << "color: " << state->color << "; ";
     }
-    if (jsonState["onoff"]) {
+    if (jsonState["onoff"]!=-1) {
         state->onoff = jsonState["onoff"].as<int>();
         Serial << "onoff: " << state->onoff << "; ";
     }
