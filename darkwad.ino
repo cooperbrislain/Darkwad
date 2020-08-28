@@ -143,10 +143,21 @@ void loop() {
 }
 
 Light::State* stateFromJson(JsonObject jsonState) {
+    Serial << "Loading State from JSON...\n";
     Light::State* state = new Light::State;
-    if (jsonState["color"]) state->color = jsonState["color"].as<String>();
-    if (jsonState["onoff"]) state->onoff = jsonState["onoff"].as<int>();
-    if (jsonState["program"]) state->program = jsonState["program"].as<String>();
+    state->name = jsonState["name"].as<String>();
+    if (jsonState["color"]) {
+        state->color = jsonState["color"].as<String>();
+        Serial << "color: " << state->color << "; ";
+    }
+    if (jsonState["onoff"]) {
+        state->onoff = jsonState["onoff"].as<int>();
+        Serial << "onoff: " << state->onoff << "; ";
+    }
+    if (jsonState["program"]) {
+        state->program = jsonState["program"].as<String>();
+        Serial << "program: " << state->program << "; ";
+    }
     if (JsonArray jsonParams = jsonState["params"].as<JsonArray>()) {
         int numParams = jsonState["params"].size();
         int *params = new int[numParams];
@@ -154,7 +165,9 @@ Light::State* stateFromJson(JsonObject jsonState) {
             params[j] = jsonParams[j];
         }
         state->params = params;
+        Serial << "params: [" << numParams << "]";
     }
+    Serial << "returning state: " << state->name << "\n";
     return state;
 }
 
