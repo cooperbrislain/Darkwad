@@ -79,15 +79,15 @@ void Light::setState(State* state) {
             Serial << (state->onoff? "On" : "Off") << "|";
             turn(state->onoff);
         }
-        if (state->program) {
+        if (state->program != "") {
             Serial << "Prog:" << state->program << "|";
             setProgram(state->program);
         }
-        if (sizeof(state->params)) {
+        if (state->params != nullptr) {
             Serial << "Params...|";
             setParams(state->params);
         }
-        if (state->color) {
+        if (state->color != "") {
             Serial << "Color:" << state->color;
             setColor(state->color);
         }

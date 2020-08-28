@@ -16,9 +16,9 @@ public:
 
     struct State {
         String  name;
-        int*    params;
-        String  color;
-        String  program;
+        int*    params = nullptr;
+        String  color = "";
+        String  program = "";
         int     onoff = -1;
         int     count = -1;
     };
