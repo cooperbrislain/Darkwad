@@ -86,8 +86,8 @@ void setup() {
             if (controlType == "Button") {
                 int pin                 = control["pin"];
                 Button* newButton       = new Button(controlName, pin);
-                if (control["press"]) newButton->setPress(control["press"]);
-                if (control["release"]) newButton->setRelease(control["release"]);
+                if (control["press"]) newButton->setPress(actions[control["press"]]);
+                if (control["release"]) newButton->setRelease(actions[control["release"]]);
                 controls[i] = newButton;
             }
             if (controlType == "DPad") {
