@@ -85,7 +85,7 @@ void setup() {
                 int pin                 = control["pin"];
                 Button* newButton       = new Button(controlName, pin);
                 if (control["press"]) newButton->setPress(control["press"]);
-                if (contriol["release"]) newButton->setRelease(contriol["release"]);
+                if (control["release"]) newButton->setRelease(control["release"]);
                 controls[i] = newButton;
                 Serial << "New Button Added.\n";
             }
