@@ -1,9 +1,12 @@
 #include "darkwad.h"
 
-Config      config;
-CRGB*       leds;
-Light**     lights;
-Control**   controls;
+Config          config;
+CRGB*           leds;
+Light**         lights;
+Control**       controls;
+std::map<String, Action*> actions;
+std::map<String, Light::State*> states;
+std::map<String, Light*> lightMap;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -42,12 +45,32 @@ void setup() {
 
     leds = new CRGB[config.num_leds];
 
+    if (obj.containsKey("states")) {
+        JsonArray jsonStates = obj["states"];
+        int numStates = jsonStates.size();
+        for (int i=0; i<numStates; i++) {
+            JsonObject jsonState = jsonStates[i];
+            Light::State* state = stateFromJson(jsonState);
+            states[state->name] = state;
+        }
+    }
+
     if (obj.containsKey("lights")) {
         JsonArray jsonLights = obj["lights"];
         int numLights = config.num_lights = jsonLights.size();
         lights = new Light*[numLights];
         for (int i=0; i<numLights; i++) {
             lights[i] = new Light(&leds[0], jsonLights[i]);
+            lightMap[lights[i]->getName()] = lights[i];
+        }
+    }
+
+    if (obj.containsKey("actions")) {
+        JsonArray jsonActions = obj["actions"];
+        int numActions = jsonActions.size();
+        for (int i=0; i<numActions; i++) {
+            Action* newAction = actionFromJson(jsonActions[i].as<JsonObject>());
+            actions[newAction->getName()] = newAction;
         }
     }
 
@@ -63,49 +86,9 @@ void setup() {
             if (controlType == "Button") {
                 int pin                 = control["pin"];
                 Button* newButton       = new Button(controlName, pin);
-                JsonObject jsonPress    = control["press"];
-                JsonObject jsonRelease  = control["release"];
-                if (jsonPress) {
-                    Serial << "Binding onPress Action...\n";
-                    Light* light;
-                    Light::State state;
-                    String actionName       = jsonPress["action"];
-                    String lightName        = jsonPress["light"];
-                    for (int i=0; i<config.num_lights; i++) {
-                        if ((String)lights[i]->getName() == lightName) light = lights[i];
-                    }
-                    JsonObject jsonState    = jsonPress["state"];
-                    state.color             = jsonState["color"].as<String>();
-                    state.onoff             = jsonState["onoff"].as<int>();
-                    state.program           = jsonState["program"].as<String>();
-                    JsonArray JsonParams    = jsonState["params"];
-                    for (int i=0; i<JsonParams.size(); i++) {
-                        state.params[i] = JsonParams[i].as<int>();
-                    }
-                    Action* newAction = new Action(actionName, light, state);
-                    newButton->setPress(newAction);
-                }
-                if (jsonRelease) {
-                    Serial << "Binding onRelease Action...\n";
-                    Light* light;
-                    Light::State state;
-                    String actionName       = jsonRelease["action"];
-                    String lightName        = jsonRelease["light"];
-                    for (int i=0; i<config.num_lights; i++) {
-                        if ((String)lights[i]->getName() == lightName) light = lights[i];
-                    }
-                    JsonObject jsonState    = jsonRelease["state"];
-                    state.color             = jsonState["color"].as<String>();
-                    state.onoff             = jsonState["onoff"].as<int>();
-                    JsonArray JsonParams    = jsonState["params"];
-                    for (int i=0; i<JsonParams.size(); i++) {
-                        state.params[i] = JsonParams[i];
-                    }
-                    Action* newAction = new Action(actionName, light, state);
-                    newButton->setRelease(newAction);
-                }
+                if (control["press"]) newButton->setPress(actions[control["press"]]);
+                if (control["release"]) newButton->setRelease(actions[control["release"]]);
                 controls[i] = newButton;
-                Serial << "New Button Added.\n";
             }
             if (controlType == "DPad") {
                 JsonArray jsonPins = control["pins"];
@@ -157,4 +140,46 @@ void loop() {
 
     count++;
     delay(1000/config.speed);
+}
+
+Light::State* stateFromJson(JsonObject jsonState) {
+    Serial << "Loading State from JSON...\n";
+    Light::State* state = new Light::State;
+    state->name = jsonState["name"].as<String>();
+    if (jsonState["color"]) {
+        state->color = jsonState["color"].as<String>();
+        Serial << "color: " << state->color << "; ";
+    }
+    if (jsonState["onoff"]!=-1) {
+        state->onoff = jsonState["onoff"].as<int>();
+        Serial << "onoff: " << state->onoff << "; ";
+    }
+    if (jsonState["program"]) {
+        state->program = jsonState["program"].as<String>();
+        Serial << "program: " << state->program << "; ";
+    }
+    if (JsonArray jsonParams = jsonState["params"].as<JsonArray>()) {
+        int numParams = jsonState["params"].size();
+        int *params = new int[numParams];
+        for (int j=0; j<numParams; j++) {
+            params[j] = jsonParams[j];
+        }
+        state->params = params;
+        Serial << "params: [" << numParams << "]";
+    }
+    Serial << "returning state: " << state->name << "\n";
+    return state;
+}
+
+Action* actionFromJson(JsonObject jsonAction) {
+    Serial << "Loading Action from JSON...\n";
+    String actionName = jsonAction["name"];
+    String lightName = jsonAction["light"];
+    String stateName = jsonAction["state"];
+    Light* light = lightMap[lightName];
+    Light::State* state = states[stateName];
+    Serial << light->getName() << " " << state->name << "\n";
+    Action* action = new Action(actionName, light, state);
+    Serial << action->getName() << " created.\n";
+    return action;
 }

@@ -72,17 +72,28 @@ void Light::setParam(int p, int v) {
     _params[p] = v;
 }
 
-void Light::setState(State state) {
+void Light::setState(State* state) {
     try {
-        Serial << "Setting light state: ";
-        Serial << "[" << (state.onoff? "On" : "Off") << "|";
-        turn(state.onoff);
-        Serial << "Prog:" << state.program << "|";
-        setProgram(state.program);
-        Serial << "Params...|";
-        setParams(state.params);
-        Serial << "Color:" << state.color;
-        setColor(state.color);
+        Serial << "Setting light state: " << "[" << state->name << ": ";
+        if (state->onoff != -1) {
+            Serial << (state->onoff==1? "On" : "Off") << "|";
+            turn(state->onoff);
+        }
+        if (state->program != "") {
+            Serial << "Prog:" << state->program << "|";
+            setProgram(state->program);
+        }
+        if (state->params != nullptr) {
+            Serial << "Params...|";
+            setParams(state->params);
+        }
+        if (state->color != "") {
+            Serial << "Color:" << state->color;
+            setColor(state->color);
+        }
+        if (state->count != -1) {
+            _count = state->count;
+        }
         Serial << "]\n";
     } catch (int e) {
         Serial << "An Exception occurred: " << e << "\n";

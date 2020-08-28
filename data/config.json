@@ -65,52 +65,55 @@
       "type": "Button",
       "pin": 34,
       "sampleRate": 2,
-      "press": {
-        "action": "leftBlinkerOn",
-        "light": "left",
-        "state": {
-          "onoff": "on",
-          "program": "chase",
-          "params": [9,75,0,0],
-          "color": "orange"
-        }
-      },
-      "release": {
-        "action": "leftBlinkerOff",
-        "light": "left",
-        "state": {
-          "onoff": "off",
-          "program": "solid",
-          "color": "black",
-          "params": [9, 75, 0, 0]
-        }
-      }
+      "press": "leftBlinkerOn",
+      "release": "leftBlinkerOff"
     },
     {
       "name": "Right",
       "type": "Button",
       "pin": 35,
       "sampleRate": 2,
-      "press": {
-        "action": "rightBlinkerOn",
-        "light": "right",
-        "state": {
-          "onoff": "on",
-          "program": "chase",
-          "params": [9, 75, 0, 0],
-          "color": "orange"
-        }
-      },
-      "release": {
-        "action": "rightBlinkerOff",
-        "light": "right",
-        "state": {
-          "onoff": "off",
-          "program": "solid",
-          "color": "black",
-          "params": [9,75,0,0]
-        }
-      }
+      "press": "rightBlinkerOn",
+      "release": "rightBlinkerOff"
+    }
+  ],
+  "actions": [
+    {
+      "name": "leftBlinkerOn",
+      "light": "left",
+      "state": "turn_signal_on"
+    },
+    {
+      "name": "leftBlinkerOff",
+      "light": "left",
+      "state": "off"
+    },
+    {
+      "name": "rightBlinkerOn",
+      "light": "right",
+      "state": "turn_signal_on"
+    },
+    {
+      "name": "rightBlinkerOff",
+      "light": "right",
+      "state": "off"
+    }
+  ],
+  "states": [
+    {
+      "name": "off",
+      "onoff": 0,
+      "color": "black"
+    },
+    {
+      "name": "on",
+      "onoff": 1
+    },
+    {
+      "name": "turn_signal_on",
+      "onoff": 1,
+      "color": "orange",
+      "program": "chase"
     }
   ]
 }
