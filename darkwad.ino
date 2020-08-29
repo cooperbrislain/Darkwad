@@ -7,6 +7,7 @@ Control**       controls;
 std::map<String, Action*> actions;
 std::map<String, Light::State*> states;
 std::map<String, Light*> lightMap;
+std::map<String, Light::Prog*> progMap;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -183,3 +184,32 @@ Action* actionFromJson(JsonObject jsonAction) {
     Serial << action->getName() << " created.\n";
     return action;
 }
+
+Light* lightFromJson(JsonObject _jsonLight) {
+    String lightName = _jsonLight["name"].as<String>();
+    Light* newLight;
+    if (jsonLight["leds"]) {
+        // Light(String _name, CRGB** _leds) :
+        int numLeds     = _jsonLight["leds"].size();
+        CRGB** newLeds  = new CRGB*[numLeds];
+        for (int i=0; i<numLeds; i++) {
+            newLeds[i] = &leds[jsonLeds[i].as<int>()];
+        }
+        newLight = new Light(lightName, newLeds);
+    } else if (_jsonLight["led_count"]) {
+        // Light(String _name, CRGB* _leds, int _offset, int _numLeds, int _reverse=0)
+        int numLeds     = _jsonLight["led_count"];
+        int offset      = _jsonLight["led_offset"];
+        int reverse     = _jsonLight["reverse"];
+        newLight = new Light(lightName, &leds, offset, numLeds, reverse);
+    } else {
+        // TODO: handle this or something
+        throw("LIGHT JSON FAIL");
+    }
+    if (_jsonLight["initial_state"]) {
+        Light::State initState = states[_jsonLight["initial_state"].as<String>()];
+        newLight->setState(initState);
+    }
+
+    return newLight;
+};

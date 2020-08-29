@@ -8,43 +8,31 @@
       "name": "bump",
       "led_offset": 0,
       "led_count": 1,
-      "color": "green",
-      "speed": 5,
-      "program": "blink",
-      "params": [10,75,0,0]
+      "state": "off"
     },
     {
       "name": "front",
       "led_offset": 8,
-      "speed": 5,
-      "led_count": 11
+      "led_count": 11,
+      "state": "front_on"
     },
     {
       "name": "left",
       "led_offset": 1,
-      "speed": 5,
       "led_count": 5,
-      "color": "black",
-      "program": "solid",
       "reverse": 1,
-      "params": [9,75,0,0]
+      "state": "off"
     },
     {
       "name": "right",
-      "color": "black",
-      "program": "solid",
-      "speed": 5,
       "led_offset": 21,
       "led_count": 5,
-      "params": [9,75,0,0]
+      "state": "off"
     },
     {
       "name": "rear",
       "leds": [6, 7, 19, 20],
-      "speed": 5,
-      "color": "red",
-      "program": "blink",
-      "params": [1,75,0,0]
+      "state": "rearBlink"
     }
   ],
   "controls": [
@@ -65,36 +53,36 @@
       "type": "Button",
       "pin": 34,
       "sampleRate": 2,
-      "press": "leftBlinkerOn",
-      "release": "leftBlinkerOff"
+      "press": "leftSignalOn",
+      "release": "leftSignalOff"
     },
     {
       "name": "Right",
       "type": "Button",
       "pin": 35,
       "sampleRate": 2,
-      "press": "rightBlinkerOn",
-      "release": "rightBlinkerOff"
+      "press": "rightSignalrOn",
+      "release": "rightSignalOff"
     }
   ],
   "actions": [
     {
-      "name": "leftBlinkerOn",
+      "name": "leftSignalOn",
       "light": "left",
-      "state": "turn_signal_on"
+      "state": "turnSignalOn"
     },
     {
-      "name": "leftBlinkerOff",
+      "name": "leftSignalOff",
       "light": "left",
       "state": "off"
     },
     {
-      "name": "rightBlinkerOn",
+      "name": "rightSignalOn",
       "light": "right",
-      "state": "turn_signal_on"
+      "state": "turnSignalOn"
     },
     {
-      "name": "rightBlinkerOff",
+      "name": "rightSignalOff",
       "light": "right",
       "state": "off"
     }
@@ -110,10 +98,16 @@
       "onoff": 1
     },
     {
-      "name": "turn_signal_on",
+      "name": "turnSignalOn",
       "onoff": 1,
       "color": "orange",
       "program": "chase"
+    },
+    {
+      "name": "rearBlink",
+      "onoff": 1,
+      "color": "red",
+      "program": "blink"
     }
   ]
 }
