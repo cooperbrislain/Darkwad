@@ -1,33 +1,25 @@
 #include "Light.h"
 
 void Light::update() {
-    (this->*_prog)(_params[1]);
-    _count++;
+    (this.state->*prog)(this.state.params[1]);
+    this.state.count++;
 }
 
-CHSV Light::getHsv() { return rgb2hsv_approximate(_color); }
-CRGB Light::getRgb() { return _color; }
-int  Light::getParam(int p) { return _params[p]; }
-String Light::getName() { return _name; }
+String Light::getName() { return this.name }
 
-void Light::turnOn() { _onoff = 1; }
-void Light::turnOff() { _onoff = 0; }
-void Light::turn(int onoff) { _onoff = onoff; }
-void Light::toggle() { _onoff = (_onoff==1? 0 : 1); }
+CHSV Light::getHsv() { return rgb2hsv_approximate(this.state.color); }
+CRGB Light::getRgb() { return this.state.color; }
+int  Light::getParam(int _p) { return this.state.params[_p]; }
 
-void Light::setRgb(CRGB color) { _color = color; }
-void Light::setHsv(int hue, int sat, int val) { _color = CHSV(hue, sat, val); }
-void Light::setHsv(CHSV color) { _color = color; }
+void Light::turnOn() { this.state.onoff = 1 }
+void Light::turnOff() { this.state.onoff = 0 }
+void Light::turn(int _onoff) { this.state.onoff = _onoff; }
+void Light::toggle() { this.state.onoff = (this.state.onoff==1? 0 : 1); }
 
-void Light::setColor(String color) {
-    // TODO: make this a mapping or look to see if there's a function in FastLED
-    if (color == "red")     _color = CRGB::Red;
-    if (color == "orange")  _color = CRGB::Orange;
-    if (color == "blue")    _color = CRGB::Blue;
-    if (color == "green")   _color = CRGB::Green;
-    if (color == "black")   _color = CRGB::Black;
-    if (color == "white")   _color = CRGB::White;
-}
+void Light::setRgb(CRGB _color) { this.state.color = _color }
+void Light::setHsv(int _h, int _s, int _v) { this.state.color = CHSV(_h,_s,_v); }
+void Light::setHsv(CHSV _color) { this.state.color = _color; }
+void Light::setColor(String _color) { this.state.color = colorMap[_color]; }
 
 void Light::setHue(int val) {
     CHSV hsv_color = getHsv();
@@ -156,6 +148,14 @@ int Light::_prog_chase(int x) {
     return 0;
 }
 
+auto progChase = [ _this, _leds] (_t) -> int {
+    *_leds[_t%_this.numLeds] = _this.state.color;
+    return ++t;
+}
+
+Light::Prog* chase = new Light::Prog(light, )
+[ _light, _leds] () -> int { body }
+
 int Light::_prog_warm(int x) {
     if (_count%7 == 0) _prog_fade(10);
 
@@ -241,3 +241,10 @@ uint8_t nblendU8TowardU8(uint8_t cur, const uint8_t target, uint8_t x) {
         return cur - delta;
     }
 }
+
+colorMap["red"]     = CRGB::Red;
+colorMap["orange"]  = CRGB::Orange;
+colorMap["blue"]    = CRGB::Blue;
+colorMap["green"]   = CRGB::Green;
+colorMap["black"]   = CRGB::Black;
+colorMap["white"]   = CRGB::White;

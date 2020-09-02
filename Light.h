@@ -1,36 +1,64 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#define NUM_PARAMS 4
-
 #include <Arduino.h>
 #include <SPI.h>
 #include <FastLED.h>
+#include <string>
+#include <map>
 #include "config.h"
 #include <iostream>
 #include <ArduinoJson.h>
 #include "StreamPrint.h"
 
+std::map<String, CRGB> colorMap;
+
 class Light {
 public:
 
-    typedef int (*progFn)(int);
+    typedef int (*ProgFn)(int);
 
     struct State {
         String  name;
         int*    params = nullptr;
         String  color = "";
-        ProgFn  prog = nullptr;
+        Prog*   prog  = nullptr;
         int     onoff = -1;
         int     count = -1;
+    };
+
+    class Prog {
+
+    private:
+        String          name;
+        Light*          light;
+        ProgFn          prog;
+//        Light::State*   state;
+
+    public:
+        Prog (String _name) :
+            name  (_name)
+        { };
+        Prog(String _name, CRGB** _leds, State* _state, _prog) : light(_light)
+            name    (_name),
+            leds    (_leds),
+            numLeds ( _numLeds )
+        {
+            Serial << "Created Program: " << name << '\n';
+        }
+        void operator () (int x) {
+
+        }
+        String getName();
     };
 
 private:
 
     String name;
     CRGB** leds;
-    int num_leds;
+    int numLeds;
     State state;
+
     int progSolid(int x);
     int progChase(int x);
     int progBlink(int x);
@@ -65,27 +93,33 @@ public:
             this->leds[i] = _leds[i];
         }
     };
+
     String getName();
+
+    void    setState(State* state);
+
+    State   getState();
+
     void turnOn();
     void turnOff();
+    void toggle();
     void turn(int onoff);
     void blink();
-    void toggle();
+
+    void update();
+
+private:
+
     void setHue(int);
     void setRgb(CRGB);
     void setHsv(CHSV);
-    void setHsv(int hue, int sat, int val);
+    void setHsv(int _h, int _s, int _v);
     void setBrightness(int);
     void setSaturation(int);
-    void setProgram(String programName);
-    void setParam(int p, int v);
-    void setParams(int* params);
+    void setParam(int _p, int _v);
+    void setParams(int* _params);
+    void setProgram(String _progName);
     void setColor(String colorName);
-    void setState(State* state);
-    int  getParam(int p);
-    CRGB getRgb();
-    CHSV getHsv();
-    void update();
 
 };
 
