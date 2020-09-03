@@ -13,36 +13,30 @@
 
 std::map<String, CRGB> colorMap;
 
+typedef int (*ProgFn)(CRGB**, int*, int);
+
 class Light {
+
 public:
-
-    typedef int (*ProgFn)(int);
-
-    struct State {
-        String  name;
-        int*    params = nullptr;
-        String  color = "";
-        Prog*   prog  = nullptr;
-        int     onoff = -1;
-        int     count = -1;
-    };
 
     class Prog {
 
     private:
+
         String          name;
-        Light*          light;
+        CRGB**          leds;
         ProgFn          prog;
-//        Light::State*   state;
+        Light*          light;
 
     public:
+
         Prog (String _name) :
-            name  (_name)
+            name    (_name)
         { };
-        Prog(String _name, CRGB** _leds, State* _state, _prog) : light(_light)
+        Prog(String _name, CRGB** _leds, Light* _light) :
             name    (_name),
             leds    (_leds),
-            numLeds ( _numLeds )
+            light   (_light)
         {
             Serial << "Created Program: " << name << '\n';
         }
@@ -50,6 +44,15 @@ public:
 
         }
         String getName();
+    };
+
+    struct State {
+        String      name;
+        int*        params = nullptr;
+        CRGB        color;
+        Prog*       prog  = nullptr;
+        int         onoff = -1;
+        int         count = -1;
     };
 
 private:
@@ -71,17 +74,17 @@ private:
 public:
 
     Light() :
-        name        { "light" }
-        num_leds    { 0 }
+        name        { "light" },
+        numLeds     { 0 }
     { };
     Light(String _name, CRGB* _leds, int _offset, int _numLeds, int _reverse=0) :
         name    (_name),
-        numLeds (_numLeds),
-        offset  (_offset)
+        numLeds (_numLeds)
     {
+        int offset = _offset;
         this->leds = new CRGB*[numLeds];
         for (int i=0; i<numLeds; i++) {
-            this->leds[i] = reverse? &_leds[offset+numLeds-i-1] : &_leds[offset+i];
+            this->leds[i] = _reverse? &_leds[offset+numLeds-i-1] : &_leds[offset+i];
         }
     };
     Light(String _name, CRGB** _leds) :
@@ -108,8 +111,10 @@ public:
 
     void update();
 
-private:
-
+    CHSV getHsv();
+    CRGB getRgb();
+    int getParam(int);
+    void setLeds(CRGB** _leds, int _numLeds);
     void setHue(int);
     void setRgb(CRGB);
     void setHsv(CHSV);

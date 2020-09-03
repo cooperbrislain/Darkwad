@@ -1,25 +1,31 @@
 #include "Light.h"
 
 void Light::update() {
-    (this.state->*prog)(this.state.params[1]);
-    this.state.count++;
+    Serial << state.name << "\n";
+//    (state.*prog)(this->state.params[1]);
+    state.count++;
 }
 
-String Light::getName() { return this.name }
+String Light::getName() { return name; }
 
-CHSV Light::getHsv() { return rgb2hsv_approximate(this.state.color); }
-CRGB Light::getRgb() { return this.state.color; }
-int  Light::getParam(int _p) { return this.state.params[_p]; }
+CHSV Light::getHsv() { return rgb2hsv_approximate(state.color); }
+CRGB Light::getRgb() { return state.color; }
+int  Light::getParam(int _p) { return state.params[_p]; }
 
-void Light::turnOn() { this.state.onoff = 1 }
-void Light::turnOff() { this.state.onoff = 0 }
-void Light::turn(int _onoff) { this.state.onoff = _onoff; }
-void Light::toggle() { this.state.onoff = (this.state.onoff==1? 0 : 1); }
+void Light::turnOn() { state.onoff = 1; }
+void Light::turnOff() { state.onoff = 0; }
+void Light::turn(int _onoff) { state.onoff = _onoff; }
+void Light::toggle() { state.onoff = (state.onoff==1? 0 : 1); }
 
-void Light::setRgb(CRGB _color) { this.state.color = _color }
-void Light::setHsv(int _h, int _s, int _v) { this.state.color = CHSV(_h,_s,_v); }
-void Light::setHsv(CHSV _color) { this.state.color = _color; }
-void Light::setColor(String _color) { this.state.color = colorMap[_color]; }
+void Light::setRgb(CRGB _color) { state.color = _color;}
+void Light::setHsv(int _h, int _s, int _v) { state.color = CHSV(_h,_s,_v); }
+void Light::setHsv(CHSV _color) { state.color = _color; }
+void Light::setColor(String _color) { state.color = colorMap[_color]; }
+
+void Light::setLeds(CRGB** _leds, int _numLeds) {
+    leds = _leds;
+    numLeds = _numLeds;
+}
 
 void Light::setHue(int val) {
     CHSV hsv_color = getHsv();
@@ -39,20 +45,21 @@ void Light::setBrightness(int val) {
     setHsv(hsv_color);
 }
 
-void Light::setProgram(String progName) {
-    if (progName == "solid") _prog = &Light::_prog_solid;
-    if (progName == "chase") {
-        _prog = &Light::_prog_chase;
-        _params[1] = _params[1]? _params[1] : 35;
-    }
-    if (progName == "fade")  _prog = &Light::_prog_fade;
-    if (progName == "blink") _prog = &Light::_prog_blink;
-    if (progName == "warm") {
-        _prog = &Light::_prog_warm;
-        _params[0] = 50;
-    }
-    if (progName == "lfo") _prog = &Light::_prog_lfo;
-}
+void Light::setProgram 
+//void Light::setProgram(String progName) {
+//    if (progName == "solid") _prog = &Light::_prog_solid;
+//    if (progName == "chase") {
+//        _prog = &Light::_prog_chase;
+//        _params[1] = _params[1]? _params[1] : 35;
+//    }
+//    if (progName == "fade")  _prog = &Light::_prog_fade;
+//    if (progName == "blink") _prog = &Light::_prog_blink;
+//    if (progName == "warm") {
+//        _prog = &Light::_prog_warm;
+//        _params[0] = 50;
+//    }
+//    if (progName == "lfo") _prog = &Light::_prog_lfo;
+//}
 
 void Light::setParams(int* params) {
     for (int i=0; i<sizeof(params); i++) {
