@@ -33,40 +33,26 @@ void Light::setHue(int val) {
     setHsv(hsv_color);
 }
 
-void Light::setSaturation(int val) {
-    CHSV hsv_color = getHsv();
-    hsv_color.s = min(val, 100);
-    setHsv(hsv_color);
+void Light::setSaturation(int _s) {
+    CHSV hsvColor = getHsv();
+    hsvColor.s = min(_s, 100);
+    setHsv(hsvColor);
 }
 
-void Light::setBrightness(int val) {
-    CHSV hsv_color = getHsv();
-    hsv_color.v = min(val, 100);
-    setHsv(hsv_color);
+void Light::setBrightness(int _v) {
+    CHSV hsvColor = getHsv();
+    hsvColor.v = min(_v, 100);
+    setHsv(hsvColor);
 }
 
 void Light::setProgram(String _progName) {
-
+    this->state.prog = &(progMap[_progName]);
 }
 
-void Light::setProgram(LightProg _prog) {
-    Serial << this->getName() << " set program to " << _prog->getName() << "\n";
+void Light::setProgram(ProgFn _prog) {
+    Serial << this->getName() << " set program to custom... ";
+    this->state.prog = _prog;
 }
-
-//void Light::setProgram(String progName) {
-//    if (progName == "solid") _prog = &Light::_prog_solid;
-//    if (progName == "chase") {
-//        _prog = &Light::_prog_chase;
-//        _params[1] = _params[1]? _params[1] : 35;
-//    }
-//    if (progName == "fade")  _prog = &Light::_prog_fade;
-//    if (progName == "blink") _prog = &Light::_prog_blink;
-//    if (progName == "warm") {
-//        _prog = &Light::_prog_warm;
-//        _params[0] = 50;
-//    }
-//    if (progName == "lfo") _prog = &Light::_prog_lfo;
-//}
 
 void Light::setParams(int* _params) {
     int numParams = sizeof(_params);
@@ -210,6 +196,4 @@ colorMap["green"]   = CRGB::Green;
 colorMap["black"]   = CRGB::Black;
 colorMap["white"]   = CRGB::White;
 
-progMap["blink"]    = [] (Light*) { return [Light
-    return 0;
-}
+progMap["solid"]    = &Light::progSolid;

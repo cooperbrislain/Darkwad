@@ -11,7 +11,7 @@
 #include <ArduinoJson.h>
 #include "StreamPrint.h"
 
-typedef int (*ProgFn)(CRGB**, int*, int);
+typedef void (*ProgFn)();
 
 std::map<String, CRGB> colorMap;
 std::map<String, ProgFn> progMap;
@@ -24,7 +24,7 @@ public:
         String      name;
         int*        params = nullptr;
         CRGB        color;
-        Prog*       prog  = nullptr;
+        ProgFn*     prog  = nullptr;
         int         onoff = -1;
         int         count = -1;
     };
@@ -73,14 +73,14 @@ public:
 
     String getName();
 
-    void    setState(State* state);
+    void    setState(State* _state);
 
     State   getState();
 
     void turnOn();
     void turnOff();
     void toggle();
-    void turn(int onoff);
+    void turn(int _onoff);
     void blink();
 
     void update();
@@ -96,13 +96,12 @@ public:
     void setBrightness(int);
     void setSaturation(int);
     void setParam(int _p, int _v);
-    void setParams(int* _params);
-    void setProgram(String _progName);
-    void setProgram(Light::Prog*);
-    void setColor(String colorName);
+    void setParams(int*);
+    void setProgram(String);
+    void setProgram(ProgFn);
+    void setColor(String);
 
 };
-typedef Light::Prog* LightProg;
 
 uint8_t nblendU8TowardU8(uint8_t cur, const uint8_t target, uint8_t x);
 CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x);
