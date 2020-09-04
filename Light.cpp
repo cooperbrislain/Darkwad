@@ -17,7 +17,7 @@ void Light::turnOff() { state.onoff = 0; }
 void Light::turn(int _onoff) { state.onoff = _onoff; }
 void Light::toggle() { state.onoff = (state.onoff==1? 0 : 1); }
 
-void Light::setRgb(CRGB _color) { state.color = _color;}
+void Light::setRgb(CRGB _color) { state.color = _color; }
 void Light::setHsv(int _h, int _s, int _v) { state.color = CHSV(_h,_s,_v); }
 void Light::setHsv(CHSV _color) { state.color = _color; }
 void Light::setColor(String _color) { state.color = colorMap[_color]; }
@@ -45,7 +45,14 @@ void Light::setBrightness(int val) {
     setHsv(hsv_color);
 }
 
-void Light::setProgram 
+void Light::setProgram(String _progName) {
+
+}
+
+void Light::setProgram(LightProg _prog) {
+    Serial << this->getName() << " set program to " << _prog->getName() << "\n";
+}
+
 //void Light::setProgram(String progName) {
 //    if (progName == "solid") _prog = &Light::_prog_solid;
 //    if (progName == "chase") {
@@ -61,37 +68,39 @@ void Light::setProgram
 //    if (progName == "lfo") _prog = &Light::_prog_lfo;
 //}
 
-void Light::setParams(int* params) {
-    for (int i=0; i<sizeof(params); i++) {
-        _params[i] = params[i];
+void Light::setParams(int* _params) {
+    int numParams = sizeof(_params);
+    for (int i=0; i<numParams; i++) {
+        state.params[i] = _params[i];
     }
 }
 
-void Light::setParam(int p, int v) {
-    _params[p] = v;
+void Light::setParam(int _p, int _v) {
+    state.params[_p] = _v;
 }
 
-void Light::setState(State* state) {
+
+void Light::setState(State* _state) {
     try {
-        Serial << "Setting light state: " << "[" << state->name << ": ";
-        if (state->onoff != -1) {
-            Serial << (state->onoff==1? "On" : "Off") << "|";
-            turn(state->onoff);
+        Serial << "Setting light state: " << "[" << _state->name << ": ";
+        if (_state->onoff != -1) {
+            Serial << (_state->onoff==1? "On" : "Off") << "|";
+            turn(_state->onoff);
         }
-        if (state->program != "") {
-            Serial << "Prog:" << state->program << "|";
-            setProgram(state->program);
+        if (_state->prog) {
+            Serial << "Prog:" << _state->prog << "|";
+            setProgram(_state->prog);
         }
-        if (state->params != nullptr) {
+        if (_state->params != nullptr) {
             Serial << "Params...|";
-            setParams(state->params);
+            setParams(_state->params);
         }
-        if (state->color != "") {
-            Serial << "Color:" << state->color;
-            setColor(state->color);
+        if (_state->color) {
+            Serial << "Color:" << _state->color;
+            setRgb(_state->color);
         }
-        if (state->count != -1) {
-            _count = state->count;
+        if (_state->count != -1) {
+            state.count = _state->count;
         }
         Serial << "]\n";
     } catch (int e) {
@@ -100,143 +109,88 @@ void Light::setState(State* state) {
 }
 
 void Light::blink() {
-    for (int i=0; i<_num_leds; i++) {
-        *(CRGB*)_leds[i] = CRGB::White;
+    for (int i=0; i<numLeds; i++) {
+        *(CRGB*)leds[i] = CRGB::White;
     }
     update();
     delay(25);
-    for (int i=0; i<_num_leds; i++) {
-        *(CRGB*)_leds[i] = CRGB::Black;
+    for (int i=0; i<numLeds; i++) {
+        *(CRGB*)leds[i] = CRGB::Black;
     }
     update();
 }
 
 // programs
 
-int Light::_prog_solid(int x) {
-    for (int i=0; i<_num_leds; i++) {
-        *_leds[i] = _color;
+int Light::progSolid() {
+    for (int i=0; i<numLeds; i++) {
+        leds[i] = state.color;
     }
-    return 0;
 }
 
-int Light::_prog_fade(int x) {
-    for(int i=0; i<_num_leds; i++) {
-        _leds[i]->fadeToBlackBy(x);
+int Light::progFade() {
+    for(int i=0; i<numLeds; i++) {
+        leds[i]->fadeToBlackBy(state.params[1]);
     }
-    return 0;
 }
 
-int Light::_prog_fadein(int x) {
-    bool still_fading = false;
-    for(int i=0; i<_num_leds; i++) {
-        *_leds[i] = fadeTowardColor(*_leds[i], _color, x);
-        if (*_leds[i] != _color) still_fading = true;
+int Light::progFadein() {
+    bool stillFading = false;
+    for(int i=0; i<numLeds; i++) {
+        leds[i] = fadeTowardColor(leds[i], state.color, state.params[1]);
+        if (leds[i] != state.color) stillFading = true;
     }
-    if (!still_fading) _prog = &Light::_prog_solid;
-    return 0;
+    if (!stillFading) state.prog = &Light::progSolid;
 }
 
-int Light::_prog_fadeout(int x) {
-    bool still_fading = false;
-    for(int i=0; i<_num_leds; i++) {
-        _leds[i]->fadeToBlackBy(x);
-        if (*_leds[i]) still_fading = true;
+int Light::progFadeout() {
+    bool stillFading = false;
+    for(int i=0; i<numLeds; i++) {
+        leds[i]->fadeToBlackBy(x);
+        if (*_leds[i]) stillFading = true;
     }
-    if (!still_fading) _onoff = false;
-    return 0;
+    if (!stillFading) state.onoff = false;
 }
 
-int Light::_prog_chase(int x) {
+int Light::progChase() {
     // params: 0: Chase Speed
     //         1: Fade Speed
-    _prog_fade(_params[1]);
-    *_leds[_count%_num_leds] = _color;
-    return 0;
+    progFade(state.params[1]);
+    *leds[state.count%numLeds] = state.color;
 }
 
-auto progChase = [ _this, _leds] (_t) -> int {
-    *_leds[_t%_this.numLeds] = _this.state.color;
-    return ++t;
-}
-
-Light::Prog* chase = new Light::Prog(light, )
-[ _light, _leds] () -> int { body }
-
-int Light::_prog_warm(int x) {
-    if (_count%7 == 0) _prog_fade(10);
-
-    if (_count%11 == 0) {
-        _index = random(_num_leds);
-        CHSV wc = rgb2hsv_approximate(_color);
-        wc.h = wc.h + random(11)-5;
-        wc.s = random(128)+128;
-        wc.v &=x;
-        _color = wc;
-    }
-    *_leds[_index] += _color;
-    return 0;
-}
-
-int Light::_prog_xmas(int x) {
-    if (_count%7 == 0) _prog_fade(1);
-
-    if (_count%11 == 0) {
-        _index = random(_num_leds);
-        CHSV wc = rgb2hsv_approximate(_color);
-        wc.h = wc.h + random(11)-5;
-        wc.s = random(128)+128;
-        wc.v &=x;
-        _color = wc;
-    }
-    *_leds[_index] += _color;
-    return 0;
-}
-
-int Light::_prog_lfo(int x) {
-    int wc = _color;
-    wc%=(int)round((sin(_count*3.14/180)+0.5)*255);
-    for(int i=0; i<_num_leds; i++) {
-        *_leds[i] = wc;
-    }
-    return 0;
-}
-
-int Light::_prog_longfade(int x) {
-    bool still_fading = false;
-    if(_count%10 == 0) {
-        for(int i=0; i<_num_leds; i++) {
-            _leds[i]->fadeToBlackBy(1);
-            if (*_leds[i]) still_fading = true;
+int Light::progLongfade() {
+    bool stillFading = false;
+    if(state.count%10 == 0) {
+        for(int i=0; i<numLeds; i++) {
+            leds[i]->fadeToBlackBy(1);
+            if (*leds[i]) stillFading = true;
         }
-        if (!still_fading) _onoff = false;
+        if (!stillFading) state.onoff = false;
     }
-    return 0;
 }
 
-int Light::_prog_blink(int x) {
-    _prog_fade(25);
+int Light::progBlink() {
+    progFade(25);
     if (!x) x = 25;
-    if (_count%x == 0) {
-        for(int i=0; i<_num_leds; i++) {
-            *_leds[i] = _color;
+    if (state.count%x == 0) {
+        for(int i=0; i<numLeds; i++) {
+            *leds[i] = state.color;
         }
     }
-    return 0;
 }
 
 // Helper Functions
 
 CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x) {
-    CRGB newc;
-    newc.red = nblendU8TowardU8(cur.red, target.red, x);
-    newc.green = nblendU8TowardU8(cur.green, target.green, x);
-    newc.blue = nblendU8TowardU8(cur.blue, target.blue, x);
-    return newc;
+    return CRGB(
+        nblendU8TowardU8(cur.r, target.r, x),
+        nblendU8TowardU8(cur.g, target.g, x),
+        nblendU8TowardU8(cur.b, target.b, x)
+    );
 }
 
 uint8_t nblendU8TowardU8(uint8_t cur, const uint8_t target, uint8_t x) {
-    uint8_t newc;
     if (cur == target) return cur;
     if (cur < target) {
         uint8_t delta = target - cur;
@@ -255,3 +209,7 @@ colorMap["blue"]    = CRGB::Blue;
 colorMap["green"]   = CRGB::Green;
 colorMap["black"]   = CRGB::Black;
 colorMap["white"]   = CRGB::White;
+
+progMap["blink"]    = [] (Light*) { return [Light
+    return 0;
+}

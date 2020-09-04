@@ -11,40 +11,14 @@
 #include <ArduinoJson.h>
 #include "StreamPrint.h"
 
-std::map<String, CRGB> colorMap;
-
 typedef int (*ProgFn)(CRGB**, int*, int);
+
+std::map<String, CRGB> colorMap;
+std::map<String, ProgFn> progMap;
 
 class Light {
 
 public:
-
-    class Prog {
-
-    private:
-
-        String          name;
-        CRGB**          leds;
-        ProgFn          prog;
-        Light*          light;
-
-    public:
-
-        Prog (String _name) :
-            name    (_name)
-        { };
-        Prog(String _name, CRGB** _leds, Light* _light) :
-            name    (_name),
-            leds    (_leds),
-            light   (_light)
-        {
-            Serial << "Created Program: " << name << '\n';
-        }
-        void operator () (int x) {
-
-        }
-        String getName();
-    };
 
     struct State {
         String      name;
@@ -62,14 +36,14 @@ private:
     int numLeds;
     State state;
 
-    int progSolid(int x);
-    int progChase(int x);
-    int progBlink(int x);
-    int progFade(int x);
-    int progLfo(int x);
-    int progFadeout(int x);
-    int progFadein(int x);
-    int progLongfade(int x);
+    void progSolid();
+    void progChase();
+    void progBlink();
+    void progFade();
+    void progLfo();
+    void progFadeout();
+    void progFadein();
+    void progLongfade();
 
 public:
 
@@ -124,9 +98,11 @@ public:
     void setParam(int _p, int _v);
     void setParams(int* _params);
     void setProgram(String _progName);
+    void setProgram(Light::Prog*);
     void setColor(String colorName);
 
 };
+typedef Light::Prog* LightProg;
 
 uint8_t nblendU8TowardU8(uint8_t cur, const uint8_t target, uint8_t x);
 CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x);
