@@ -110,7 +110,7 @@ void Light::blink() {
 
 void Light::progSolid() {
     for (int i=0; i<numLeds; i++) {
-        leds[i] = state.color;
+        *leds[i] = state.color;
     }
 }
 
@@ -123,8 +123,8 @@ void Light::progFade() {
 void Light::progFadein() {
     bool stillFading = false;
     for(int i=0; i<numLeds; i++) {
-        leds[i] = fadeTowardColor(leds[i], state.color, state.params[1]);
-        if (leds[i] != state.color) stillFading = true;
+        *leds[i] = fadeTowardColor(*leds[i], state.color, state.params[1]);
+        if (*leds[i] != state.color) stillFading = true;
     }
     if (!stillFading) state.prog = &Light::progSolid;
 }
@@ -132,8 +132,8 @@ void Light::progFadein() {
 void Light::progFadeout() {
     bool stillFading = false;
     for(int i=0; i<numLeds; i++) {
-        leds[i]->fadeToBlackBy(x);
-        if (*_leds[i]) stillFading = true;
+        leds[i]->fadeToBlackBy(state.params[1]);
+        if (*leds[i]) stillFading = true;
     }
     if (!stillFading) state.onoff = false;
 }
@@ -155,13 +155,26 @@ void Light::progLongfade() {
 }
 
 void Light::progBlink() {
-    progFade(25);
-    if (!x) x = 25;
+    progFade();
+    int x = state.params[1];
     if (state.count%x == 0) {
         for(int i=0; i<numLeds; i++) {
             *leds[i] = state.color;
         }
     }
+}
+
+void Light::progTwinkle() {
+    progFade();
+    int x = state.params[1];
+    int index;
+    if (rand()%100 > state.params[1]) {
+        index = rand()%numLeds;
+        state.params[1] = index;
+    } else {
+        index = state.params[1];
+    }
+    leds[i] += 64;
 }
 
 // Helper Functions

@@ -11,22 +11,45 @@
 #include <ArduinoJson.h>
 #include "StreamPrint.h"
 
-typedef void (*ProgFn)();
-
 std::map<String, CRGB> colorMap;
-std::map<String, ProgFn> progMap;
 
 class Light {
 
 public:
 
+    typedef void (Light::*ProgFn)(int*, int*, int**);
+
     struct State {
         String  name;
         int*    params = nullptr;
+        int*    progVars = nullptr;
         CRGB    color;
         ProgFn  prog  = nullptr;
         int     onoff = -1;
         int     count = -1;
+    };
+
+    class Prog {
+    private:
+
+        Light*      light;
+        int*        params; // set externally at invocation
+        int*        vars;   // operated on internally on each loop
+        int**       refs;   // refs to external variables
+        ProgFn      prog;
+
+    public:
+        Prog (Light _light, ProgFn _prog, int* _params, int** refs) :
+                light   (_light),
+                prog    {_prog},
+                params  {_params},
+                refs    { _refs? _refs : [] }
+        {
+        };
+        void operator() () {
+            progFn(light, params, vars, refs);
+        }
+
     };
 
 private:
@@ -102,6 +125,8 @@ public:
     void setColor(String);
 
 };
+
+std::map<String, Light::ProgFn*> progMap;
 
 uint8_t nblendU8TowardU8(uint8_t cur, const uint8_t target, uint8_t x);
 CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x);
