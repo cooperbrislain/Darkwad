@@ -45,13 +45,10 @@ void Light::setBrightness(int _v) {
     setHsv(hsvColor);
 }
 
-void Light::setProgram(String _progName) {
-    this->state.prog = (progMap[_progName]);
-}
-
-void Light::setProgram(ProgFn _prog) {
-    Serial << this->getName() << " set program to custom... ";
-    this->state.prog = _prog;
+void Light::setProgram(ProgFn _prog, int* _params, int** _refs) {
+    Prog newProg = new Prog(this, _prog, _params, _refs);
+    delete prog;
+    prog = newProg;
 }
 
 void Light::setParams(int* _params) {

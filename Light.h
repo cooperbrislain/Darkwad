@@ -17,7 +17,7 @@ class Light {
 
 public:
 
-    typedef void (Light::*ProgFn)(int*, int*, int**);
+    typedef int (Light::*ProgFn)(int*, int*, int**);
 
     struct State {
         String  name;
@@ -39,17 +39,17 @@ public:
         ProgFn      prog;
 
     public:
-        Prog (Light _light, ProgFn _prog, int* _params, int** refs) :
+        Prog (Light* _light, ProgFn _prog, int* _params, int** refs) :
                 light   (_light),
                 prog    {_prog},
                 params  {_params},
                 refs    { _refs? _refs : [] }
+                vars    { 0,0,0,0 };
         {
         };
         void operator() () {
-            progFn(light, params, vars, refs);
+            progFn(params, vars, refs);
         }
-
     };
 
 private:
@@ -59,14 +59,15 @@ private:
     int     numLeds;
     State   state;
 
-    void progSolid();
-    void progChase();
-    void progBlink();
-    void progFade();
-    void progLfo();
-    void progFadeout();
-    void progFadein();
-    void progLongfade();
+    int progSolid(int*, int*, int**);
+    int progChase(int*, int*, int**);
+    int progBlink(int*, int*, int**);
+    int progFade(int*, int*, int**);
+    int progLfo(int*, int*, int**);
+    int progFadeout(int*, int*, int**);
+    int progFadein(int*, int*, int**);
+    int progLongfade(int*, int*, int**);
+    int progTwinkle(int* int* int**);
 
 public:
 
@@ -120,7 +121,6 @@ public:
     void setSaturation(int);
     void setParam(int _p, int _v);
     void setParams(int*);
-    void setProgram(String);
     void setProgram(ProgFn);
     void setColor(String);
 
