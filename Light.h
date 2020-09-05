@@ -39,12 +39,12 @@ public:
         ProgFn      prog;
 
     public:
-        Prog (Light* _light, ProgFn _prog, int* _params, int** refs) :
+        Prog (Light* _light, ProgFn _prog, int* _params, int** _refs) :
                 light   (_light),
                 prog    {_prog},
                 params  {_params},
-                refs    { _refs? _refs : [] }
-                vars    { 0,0,0,0 };
+                refs    { _refs? _refs : [] },
+                vars    { 0,0,0,0 }
         {
         };
         void operator() () {
@@ -126,7 +126,7 @@ public:
 
 };
 
-std::map<String, Light::ProgFn*> progMap;
+std::map<String, Light::ProgFn> progMap;
 
 uint8_t nblendU8TowardU8(uint8_t cur, const uint8_t target, uint8_t x);
 CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x);
