@@ -46,7 +46,7 @@ void Light::setBrightness(int _v) {
 }
 
 void Light::setProgram(String _progName) {
-    this->state.prog = &(progMap[_progName]);
+    this->state.prog = (progMap[_progName]);
 }
 
 void Light::setProgram(ProgFn _prog) {
@@ -108,19 +108,19 @@ void Light::blink() {
 
 // programs
 
-int Light::progSolid() {
+void Light::progSolid() {
     for (int i=0; i<numLeds; i++) {
         leds[i] = state.color;
     }
 }
 
-int Light::progFade() {
+void Light::progFade() {
     for(int i=0; i<numLeds; i++) {
         leds[i]->fadeToBlackBy(state.params[1]);
     }
 }
 
-int Light::progFadein() {
+void Light::progFadein() {
     bool stillFading = false;
     for(int i=0; i<numLeds; i++) {
         leds[i] = fadeTowardColor(leds[i], state.color, state.params[1]);
@@ -129,7 +129,7 @@ int Light::progFadein() {
     if (!stillFading) state.prog = &Light::progSolid;
 }
 
-int Light::progFadeout() {
+void Light::progFadeout() {
     bool stillFading = false;
     for(int i=0; i<numLeds; i++) {
         leds[i]->fadeToBlackBy(x);
@@ -138,14 +138,12 @@ int Light::progFadeout() {
     if (!stillFading) state.onoff = false;
 }
 
-int Light::progChase() {
-    // params: 0: Chase Speed
-    //         1: Fade Speed
+void Light::progChase() {
     progFade(state.params[1]);
     *leds[state.count%numLeds] = state.color;
 }
 
-int Light::progLongfade() {
+void Light::progLongfade() {
     bool stillFading = false;
     if(state.count%10 == 0) {
         for(int i=0; i<numLeds; i++) {
@@ -156,7 +154,7 @@ int Light::progLongfade() {
     }
 }
 
-int Light::progBlink() {
+void Light::progBlink() {
     progFade(25);
     if (!x) x = 25;
     if (state.count%x == 0) {
@@ -168,11 +166,11 @@ int Light::progBlink() {
 
 // Helper Functions
 
-CRGB fadeTowardColor(CRGB cur, CRGB target, uint8_t x) {
+CRGB fadeTowardColor(CRGB _c, CRGB _t, uint8_t _x) {
     return CRGB(
-        nblendU8TowardU8(cur.r, target.r, x),
-        nblendU8TowardU8(cur.g, target.g, x),
-        nblendU8TowardU8(cur.b, target.b, x)
+        nblendU8TowardU8(_c.r, _t.r, _x),
+        nblendU8TowardU8(_c.g, _t.g, _x),
+        nblendU8TowardU8(_c.b, _t.b, _x)
     );
 }
 

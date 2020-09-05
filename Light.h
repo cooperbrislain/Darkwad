@@ -21,20 +21,20 @@ class Light {
 public:
 
     struct State {
-        String      name;
-        int*        params = nullptr;
-        CRGB        color;
-        ProgFn*     prog  = nullptr;
-        int         onoff = -1;
-        int         count = -1;
+        String  name;
+        int*    params = nullptr;
+        CRGB    color;
+        ProgFn  prog  = nullptr;
+        int     onoff = -1;
+        int     count = -1;
     };
 
 private:
 
-    String name;
-    CRGB** leds;
-    int numLeds;
-    State state;
+    String  name;
+    CRGB**  leds;
+    int     numLeds;
+    State   state;
 
     void progSolid();
     void progChase();
