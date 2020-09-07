@@ -2,46 +2,49 @@
   "name": "Darkwad",
   "num_leds": 101,
   "bump_led": 1,
-  "speed": 250,
+  "speed": 500,
   "lights": [
     {
       "name": "bump",
       "led_offset": 0,
       "led_count": 1,
       "color": "green",
-      "speed": 5,
+      "speed": 1,
       "program": "blink",
       "params": [10,75,0,0]
     },
     {
       "name": "front",
-      "led_offset": 8,
-      "speed": 5,
-      "led_count": 11
+      "program": "darkwad",
+      "led_offset":1,
+      "led_count": 25,
+      "speed": 1,
+      "params": [1, 50, 0, 0]
     },
     {
       "name": "left",
-      "led_offset": 1,
-      "speed": 5,
-      "led_count": 5,
+      "led_offset": 26,
+      "led_count": 25,
+      "speed": 1,
       "color": "black",
       "program": "solid",
       "reverse": 1,
-      "params": [9,75,0,0]
+      "params": [1,30,0,0]
     },
     {
       "name": "right",
       "color": "black",
       "program": "solid",
-      "speed": 5,
-      "led_offset": 21,
-      "led_count": 5,
-      "params": [9,75,0,0]
+      "speed": 1,
+      "led_offset": 51,
+      "led_count": 25,
+      "params": [1,30,0,0]
     },
     {
       "name": "rear",
-      "leds": [6, 7, 19, 20],
-      "speed": 5,
+      "led_offset": 76,
+      "led_count": 25,
+      "speed": 1,
       "color": "red",
       "program": "blink",
       "params": [1,75,0,0]
@@ -113,7 +116,8 @@
       "name": "turn_signal_on",
       "onoff": 1,
       "color": "orange",
-      "program": "chase"
+      "program": "darkwad",
+      "params": [1, 60, 0, 0]
     }
   ]
 }

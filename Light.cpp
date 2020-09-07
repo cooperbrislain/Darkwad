@@ -60,6 +60,7 @@ void Light::setProgram(String progName) {
         _params[0] = 50;
     }
     if (progName == "lfo") _prog = &Light::_prog_lfo;
+    if (progName == "darkwad") _prog = &Light::_prog_darkwad;
 }
 
 void Light::setParams(int* params) {
@@ -215,6 +216,13 @@ int Light::_prog_blink(int x) {
             *_leds[i] = _color;
         }
     }
+    return 0;
+}
+
+int Light::_prog_darkwad(int x) {
+    _prog_fade(25);
+    int i = _num_leds*((sin((float)(_count/_params[1]))+1)/2.0f);
+    *_leds[i] = _color;
     return 0;
 }
 

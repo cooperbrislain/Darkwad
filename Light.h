@@ -46,6 +46,7 @@ private:
     int _prog_fadeout(int x);
     int _prog_fadein(int x);
     int _prog_longfade(int x);
+    int _prog_darkwad(int x);
     int (Light::*_prog)(int x);
 
 public:
