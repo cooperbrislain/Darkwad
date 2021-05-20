@@ -1,4 +1,4 @@
-#include "darkwad.h"
+#include "Darkwad.h"
 
 Config          config;
 CRGB*           leds;
@@ -6,7 +6,7 @@ Light**         lights;
 Control**       controls;
 std::map<String, Action*> actions;
 std::map<String, Light::State*> states;
-std::map<String, Light*> lightMap;
+std::map<Strind, Light*> lightMap;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 

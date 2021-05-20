@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/darkwad.iml" filepath="$PROJECT_DIR$/.idea/darkwad.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Darkwad.iml" filepath="$PROJECT_DIR$/.idea/Darkwad.iml" />
     </modules>
   </component>
 </project>
