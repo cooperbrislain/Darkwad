@@ -1,52 +1,53 @@
 {
   "name": "Darkwad",
-  "num_leds": 101,
+  "num_leds": 26,
   "bump_led": 1,
-  "speed": 250,
+  "speed": 500,
   "lights": [
     {
       "name": "bump",
       "led_offset": 0,
       "led_count": 1,
       "color": "green",
-      "speed": 5,
+      "speed": 1,
       "program": "blink",
-      "params": [10,75,0,0]
-    },
-    {
-      "name": "front",
-      "program": "lfo",
-      "color": "blue",
-      "led_offset": 8,
-      "speed": 5,
-      "led_count": 11
+      "params": [7,60,0,0]
     },
     {
       "name": "left",
+      "color": "orange",
+      "program": "chase",
+      "speed": 1,
       "led_offset": 1,
-      "speed": 5,
-      "led_count": 5,
-      "color": "black",
-      "program": "solid",
+      "led_count": 25,
       "reverse": 1,
-      "params": [9,75,0,0]
+      "params": [25,75,0,0]
     },
     {
       "name": "right",
-      "color": "black",
-      "program": "solid",
-      "speed": 5,
-      "led_offset": 21,
-      "led_count": 5,
-      "params": [9,75,0,0]
+      "color": "orange",
+      "program": "chase",
+      "speed": 1,
+      "led_offset": 1,
+      "led_count": 25,
+      "params": [25,75,0,0]
+    },
+    {
+      "name": "front",
+      "program": "warm",
+      "color": "red",
+      "led_offset": 1,
+      "speed": 1,
+      "led_count": 25,
+      "params": [3, 150, 0, 0]
     },
     {
       "name": "rear",
-      "leds": [6, 7, 19, 20],
-      "speed": 5,
-      "color": "red",
+      "leds": [1, 2, 24, 25],
+      "speed": 1,
+      "color": "white",
       "program": "blink",
-      "params": [1,75,0,0]
+      "params": [11,50,0,0]
     }
   ],
   "controls": [

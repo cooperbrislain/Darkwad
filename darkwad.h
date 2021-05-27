@@ -7,7 +7,8 @@
 #include <map>
 #include <iostream>
 
-#include <SPIFlash.h>
+#include "SPIFFS.h"
+
 #include <SPI.h>
 #include <Wire.h>
 #include <ArduinoJson.h>
