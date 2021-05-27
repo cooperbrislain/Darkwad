@@ -21,6 +21,12 @@ void Light::setHsv(CHSV color) { _color = color; }
 
 void Light::setColor(String color) {
     // TODO: make this a mapping or look to see if there's a function in FastLED
+    if (color.at(0) == '#') {
+        String hexCode(color.substr(1));
+        int newColor = stoi(hexCode, 0, 16);
+        state.color = newColor;
+        return;
+    }
     if (color == "red")     _color = CRGB::Red;
     if (color == "orange")  _color = CRGB::Orange;
     if (color == "blue")    _color = CRGB::Blue;

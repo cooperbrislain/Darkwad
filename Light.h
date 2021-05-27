@@ -15,26 +15,21 @@ class Light {
 public:
 
     struct State {
-        String  name;
-        int*    params = nullptr;
-        String  color = "";
-        String  program = "";
-        int     onoff = -1;
-        int     count = -1;
+        int* params         = nullptr;
+        String color        = "";
+        String program      = "";
+        bool on             = false;
+        uint8_t count       = -1;
+        int last_brightness = 0;
     };
 
 private:
 
     CRGB** _leds;
     State _state;
-    CRGB _color;
-    int _params [NUM_PARAMS];
     int _num_leds;
     int _offset;
-    int _last_brightness;
-    bool _onoff;
     String _name;
-    unsigned int _count;
     unsigned int _index;
     int _prog_solid(int x);
     int _prog_chase(int x);
@@ -52,7 +47,6 @@ public:
 
     Light() :
         _color      { CRGB::White },
-        _onoff      { 0 },
         _num_leds   { 0 },
         _name       { "light" },
         _prog       { &Light::_prog_solid },
@@ -63,7 +57,6 @@ public:
         _name       { name },
         _num_leds   { num_leds },
         _color      { CRGB::White },
-        _onoff      { 0 },
         _count      { 0 },
         _offset     { offset },
         _prog       { &Light::_prog_solid },
@@ -79,7 +72,6 @@ public:
         _color      { CRGB::White },
         _count      { 0 },
         _offset     { 0 },
-        _onoff      { 0 },
         _num_leds   { sizeof(leds) },
         _prog       { &Light::_prog_solid },
         _params     { 1, 0, 0, 0 }
@@ -91,7 +83,6 @@ public:
     };
     Light(CRGB* leds, JsonObject jsonLight) :
         _name       { jsonLight["name"].as<String>() },
-        _onoff      { 0 },
         _offset     { 0 },
         _count      { 0 },
         _color      { CRGB::White },
