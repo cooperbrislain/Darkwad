@@ -7,3 +7,7 @@ cmake-build-debug
 cmake-build-xtensa
 mqpass
 config.h
+.pio
+CMakeListsPrivate.txt
+cmake-build-*/
+venv

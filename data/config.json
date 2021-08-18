@@ -1,6 +1,6 @@
 {
   "name": "Darkwad",
-  "num_leds": 26,
+  "num_leds": 22,
   "bump_led": 1,
   "speed": 500,
   "lights": [
@@ -8,98 +8,38 @@
       "name": "bump",
       "led_offset": 0,
       "led_count": 1,
-      "color": "green",
-      "speed": 1,
+      "color": "blue",
+      "speed": 5,
       "program": "blink",
-      "params": [7,60,0,0]
+      "params": [20,60,0,0]
     },
     {
-      "name": "left",
-      "color": "orange",
+      "name": "kubepi",
+      "color": "blue",
       "program": "chase",
-      "speed": 1,
+      "speed": 3,
       "led_offset": 1,
-      "led_count": 25,
+      "led_count": 7,
       "reverse": 1,
-      "params": [25,75,0,0]
+      "params": [100,50,0,0]
     },
     {
-      "name": "right",
-      "color": "orange",
+      "name": "hass",
+      "color": "green",
       "program": "chase",
-      "speed": 1,
-      "led_offset": 1,
-      "led_count": 25,
-      "params": [25,75,0,0]
+      "speed": 3,
+      "led_offset": 8,
+      "led_count": 7,
+      "params": [100,50,0,0]
     },
     {
-      "name": "front",
-      "program": "warm",
+      "name": "octopi",
+      "program": "chase",
       "color": "red",
-      "led_offset": 1,
-      "speed": 1,
-      "led_count": 25,
-      "params": [3, 150, 0, 0]
-    },
-    {
-      "name": "rear",
-      "leds": [1, 2, 24, 25],
-      "speed": 1,
-      "color": "white",
-      "program": "blink",
-      "params": [11,50,0,0]
-    }
-  ],
-  "controls": [
-    {
-      "name": "Button",
-      "type": "Button",
-      "pin": 15,
-      "sampleRate": 10
-    },
-    {
-      "name": "DHat",
-      "type": "DPad",
-      "pins": [12,14,27,26],
-      "sampleRate": 5
-    },
-    {
-      "name": "Left",
-      "type": "Button",
-      "pin": 34,
-      "sampleRate": 2,
-      "press": "leftBlinkerOn",
-      "release": "leftBlinkerOff"
-    },
-    {
-      "name": "Right",
-      "type": "Button",
-      "pin": 35,
-      "sampleRate": 2,
-      "press": "rightBlinkerOn",
-      "release": "rightBlinkerOff"
-    }
-  ],
-  "actions": [
-    {
-      "name": "leftBlinkerOn",
-      "light": "left",
-      "state": "turn_signal_on"
-    },
-    {
-      "name": "leftBlinkerOff",
-      "light": "left",
-      "state": "off"
-    },
-    {
-      "name": "rightBlinkerOn",
-      "light": "right",
-      "state": "turn_signal_on"
-    },
-    {
-      "name": "rightBlinkerOff",
-      "light": "right",
-      "state": "off"
+      "led_offset": 15,
+      "speed": 3,
+      "led_count": 7,
+      "params": [20,75, 0, 0]
     }
   ],
   "states": [
@@ -111,12 +51,6 @@
     {
       "name": "on",
       "onoff": 1
-    },
-    {
-      "name": "turn_signal_on",
-      "onoff": 1,
-      "color": "orange",
-      "program": "chase"
     }
   ]
 }
