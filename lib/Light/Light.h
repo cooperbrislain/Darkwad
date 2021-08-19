@@ -31,6 +31,7 @@ private:
     int _offset;
     String _name;
     unsigned int _index;
+
     int _prog_solid(int x);
     int _prog_chase(int x);
     int _prog_blink(int x);
@@ -46,48 +47,36 @@ private:
 public:
 
     Light() :
-        _color      { CRGB::White },
         _num_leds   { 0 },
-        _name       { "light" },
-        _prog       { &Light::_prog_solid },
-        _count      { 0 },
-        _params     { 1, 0, 0, 0 }
+        _name       { "light" }
     { };
+
     Light(String name, CRGB* leds, int offset, int num_leds, int reverse=0) :
         _name       { name },
         _num_leds   { num_leds },
-        _color      { CRGB::White },
-        _count      { 0 },
-        _offset     { offset },
-        _prog       { &Light::_prog_solid },
-        _params     { 1, 0, 0, 0 }
+        _offset     { offset }
     {
         _leds = new CRGB*[num_leds];
         for (int i=0; i<num_leds; i++) {
             _leds[i] = reverse? &leds[offset+num_leds-i-1] : &leds[offset+i];
         }
     };
+
     Light(String name, CRGB** leds) :
         _name       { name },
-        _color      { CRGB::White },
-        _count      { 0 },
         _offset     { 0 },
-        _num_leds   { sizeof(leds) },
-        _prog       { &Light::_prog_solid },
-        _params     { 1, 0, 0, 0 }
+        _num_leds   { sizeof(leds) }
     {
         _leds = new CRGB*[_num_leds];
         for (int i=0; i<sizeof(leds); i++) {
             _leds[i] = leds[i];
         }
     };
+
     Light(CRGB* leds, JsonObject jsonLight) :
         _name       { jsonLight["name"].as<String>() },
         _offset     { 0 },
-        _count      { 0 },
-        _color      { CRGB::White },
-        _prog       { &Light::_prog_solid },
-        _params     { 1, 0, 0, 0 }
+        _count      { 0 }
     {
         if (jsonLight["leds"]) {
             JsonArray jsonLeds = jsonLight["leds"];
@@ -116,7 +105,7 @@ public:
             JsonArray jsonParams = jsonLight["params"];
             int numParams = jsonParams.size();
             for (int i=0; i<numParams; i++) {
-                _params[i] = jsonParams[i].as<int>();
+                _state._params[i] = jsonParams[i].as<int>();
             }
         }
     };

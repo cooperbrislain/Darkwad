@@ -8,23 +8,23 @@ std::map<String, Action*> actions;
 std::map<String, Light::State*> states;
 std::map<Strind, Light*> lightMap;
 
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+//Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 int count = 0;
 
 void setup() {
     Serial.begin(115200);
 
-    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-        Serial << "SSD1306 allocation failed\n";
-        for(;;);
-    }
+//    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+//        Serial << "SSD1306 allocation failed\n";
+//        for(;;);
+//    }
 
-    display.display();
-    display.clearDisplay();
-    display.print("Test");
-    display.display();
-    delay(2000);
+//    display.display();
+//    display.clearDisplay();
+//    display.print("Test");
+//    display.display();
+//    delay(2000);
 
     Serial << "Loading configuration...\n";
     SPIFFS.begin(true);

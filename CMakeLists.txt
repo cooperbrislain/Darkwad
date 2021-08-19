@@ -6,17 +6,28 @@
 # The `CMakeListsUser.txt` will not be overwritten by PlatformIO.
 
 cmake_minimum_required(VERSION 3.13)
+
+project(Darkwad C CXX)
+
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_C_COMPILER_WORKS 1)
 set(CMAKE_CXX_COMPILER_WORKS 1)
-
-project("Darkwad" C CXX)
 
 include(CMakeListsPrivate.txt)
 
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/CMakeListsUser.txt)
 include(CMakeListsUser.txt)
 endif()
+
+add_executable(Darkwad src/Darkwad.cpp)
+
+#add_library(Light Light.cpp)
+target_link_libraries(Darkwad PUBLIC Light)
+
+target_include_directories(Darkwad PUBLIC
+        "${PROJECT_BINARY_DIR}/lib"
+        )
+
 
 add_custom_target(
     Production ALL
