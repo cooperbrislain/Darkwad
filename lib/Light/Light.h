@@ -9,14 +9,15 @@
 #include "config.h"
 #include <iostream>
 #include <ArduinoJson.h>
-#include "StreamPrint.h"
+#include <StringStream.h>
 
 class Light {
 public:
 
     struct State {
+        String name         = "unnamed";
         int* params         = nullptr;
-        String color        = "";
+        CRGB color          = CRGB::White;
         String program      = "";
         bool on             = false;
         uint8_t count       = -1;
@@ -27,9 +28,9 @@ private:
 
     CRGB** _leds;
     State _state;
+    String _name;
     int _num_leds;
     int _offset;
-    String _name;
     unsigned int _index;
 
     int _prog_solid(int x);
@@ -47,8 +48,8 @@ private:
 public:
 
     Light() :
-        _num_leds   { 0 },
-        _name       { "light" }
+        _name       { "light" },
+        _num_leds   { 0 }
     { };
 
     Light(String name, CRGB* leds, int offset, int num_leds, int reverse=0) :
@@ -64,8 +65,8 @@ public:
 
     Light(String name, CRGB** leds) :
         _name       { name },
-        _offset     { 0 },
-        _num_leds   { sizeof(leds) }
+        _num_leds   { sizeof(leds) },
+        _offset     { 0 }
     {
         _leds = new CRGB*[_num_leds];
         for (int i=0; i<sizeof(leds); i++) {
@@ -75,8 +76,7 @@ public:
 
     Light(CRGB* leds, JsonObject jsonLight) :
         _name       { jsonLight["name"].as<String>() },
-        _offset     { 0 },
-        _count      { 0 }
+        _offset     { 0 }
     {
         if (jsonLight["leds"]) {
             JsonArray jsonLeds = jsonLight["leds"];
@@ -105,7 +105,7 @@ public:
             JsonArray jsonParams = jsonLight["params"];
             int numParams = jsonParams.size();
             for (int i=0; i<numParams; i++) {
-                _state._params[i] = jsonParams[i].as<int>();
+                _state.params[i] = jsonParams[i].as<int>();
             }
         }
     };

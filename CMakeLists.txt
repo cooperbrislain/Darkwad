@@ -21,13 +21,21 @@ endif()
 
 add_executable(Darkwad src/Darkwad.cpp)
 
+include_directories("${PROJECT_BINARY_DIR}/lib")
+target_include_directories(Darkwad PUBLIC
+    "${PROJECT_BINARY_DIR}/lib"
+    )
+
+find_library(ArduinoJson
+    NAMES ArduinoJson
+    PATHS ~/Code/Arduino/libraries)
+find_library(Light
+    NAMES Light
+    PATHS lib)
+
 #add_library(Light Light.cpp)
 target_link_libraries(Darkwad PUBLIC Light)
-
-target_include_directories(Darkwad PUBLIC
-        "${PROJECT_BINARY_DIR}/lib"
-        )
-
+target_link_libraries(Darkwad PUBLIC Action)
 
 add_custom_target(
     Production ALL

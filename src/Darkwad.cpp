@@ -6,7 +6,7 @@ Light**         lights;
 Control**       controls;
 std::map<String, Action*> actions;
 std::map<String, Light::State*> states;
-std::map<Strind, Light*> lightMap;
+std::map<String, Light*> lightMap;
 
 //Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -147,12 +147,12 @@ Light::State* stateFromJson(JsonObject jsonState) {
     Light::State* state = new Light::State;
     state->name = jsonState["name"].as<String>();
     if (jsonState["color"]) {
-        state->color = jsonState["color"].as<String>();
+        state->color = CRGB(jsonState["color"].as<uint32_t>());
         Serial << "color: " << state->color << "; ";
     }
     if (jsonState["onoff"]!=-1) {
-        state->onoff = jsonState["onoff"].as<int>();
-        Serial << "onoff: " << state->onoff << "; ";
+        state->on = jsonState["onoff"].as<int>();
+        Serial << "onoff: " << state->on << "; ";
     }
     if (jsonState["program"]) {
         state->program = jsonState["program"].as<String>();

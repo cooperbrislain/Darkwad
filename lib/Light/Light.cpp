@@ -10,47 +10,39 @@ CRGB Light::getRgb() { return _state.color; }
 int  Light::getParam(int p) { return _state.params[p]; }
 String Light::getName() { return _name; }
 
-void Light::turnOn() { _onoff = 1; }
-void Light::turnOff() { _onoff = 0; }
-void Light::turn(int onoff) { _onoff = onoff; }
-void Light::toggle() { _onoff = (_onoff==1? 0 : 1); }
+void Light::turnOn() { _state.on = 1; }
+void Light::turnOff() { _state.on = 0; }
+void Light::turn(int onoff) { _state.on = onoff; }
+void Light::toggle() { _state.on = (_state.on==1? 0 : 1); }
 
 void Light::setRgb(CRGB color) { _state.color = color; }
 void Light::setHsv(int hue, int sat, int val) { _state.color = CHSV(hue, sat, val); }
 void Light::setHsv(CHSV color) { _state.color = color; }
 
 void Light::setColor(String color) {
-    // TODO: make this a mapping or look to see if there's a function in FastLED
-    if (color.at(0) == '#') {
-        String hexCode(color.substr(1));
-        int newColor = stoi(hexCode, 0, 16);
-        _state.color = newColor;
-        return;
-    }
-    if (color == "red")     _state.color = CRGB::Red;
-    if (color == "orange")  _state.color = CRGB::Orange;
-    if (color == "blue")    _state.color = CRGB::Blue;
-    if (color == "green")   _state.color = CRGB::Green;
-    if (color == "black")   _state.color = CRGB::Black;
-    if (color == "white")   _state.color = CRGB::White;
+    char hexCode[6];
+    color.toCharArray(hexCode, sizeof(hexCode));
+    int newColor = strtol(hexCode, 0, 16);
+    _state.color = newColor;
+    return;
 }
 
 void Light::setHue(int val) {
-    CHSV hsv_state.color = getHsv();
-    hsv_state.color.h = val;
-    setHsv(hsv_state.color);
+    CHSV hsv_color = getHsv();
+    hsv_color.h = val;
+    setHsv(hsv_color);
 }
 
 void Light::setSaturation(int val) {
-    CHSV hsv_state.color = getHsv();
-    hsv_state.color.s = min(val, 100);
-    setHsv(hsv_state.color);
+    CHSV hsv_color = getHsv();
+    hsv_color.s = min(val, 100);
+    setHsv(hsv_color);
 }
 
 void Light::setBrightness(int val) {
-    CHSV hsv_state.color = getHsv();
-    hsv_state.color.v = min(val, 100);
-    setHsv(hsv_state.color);
+    CHSV hsv_color = getHsv();
+    hsv_color.v = min(val, 100);
+    setHsv(hsv_color);
 }
 
 void Light::setProgram(String progName) {

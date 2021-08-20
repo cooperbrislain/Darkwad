@@ -1,1 +1,5 @@
-include_directories("$ENV{HOME}/Code/Arduino/libraries")
+#include_directories("$ENV{HOME}/Code/Arduino/libraries")
+
+set(ARDUINO_LIBS $ENV{HOME}/Code/Arduino/libraries)
+
+include_directories(${ARDUINO_LIBS})

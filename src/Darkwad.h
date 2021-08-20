@@ -6,22 +6,22 @@
 #include <string>
 #include <map>
 #include <iostream>
-
-#include "SPIFFS.h"
+#include <StringStream.h>
+#include <SPIFFS.h>
 
 #include <SPI.h>
 #include <Wire.h>
 #include <ArduinoJson.h>
 #include <FastLED.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 
 #include "config.h"
 
-#include "Light.h"
-#include "Button.h"
-#include "DPad.h"
-#include "BrakeControl.h"
+#include <Light.h>
+#include <Button.h>
+#include <DPad.h>
+#include <BrakeControl.h>
+#include <Action.h>
+#include <Control.h>
 
 #define LED_FRONT lights[1]
 #define LED_REAR lights[4]
