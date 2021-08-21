@@ -124,7 +124,7 @@ public:
     void setProgram(String programName);
     void setParam(int p, int v);
     void setParams(int* params);
-    void setColor(String colorName);
+    void setColor(CRGB color);
     void setState(State* state);
     int  getParam(int p);
     CRGB getRgb();

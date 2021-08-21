@@ -6,7 +6,6 @@
 #include <string>
 #include <map>
 #include <iostream>
-#include <StringStream.h>
 #include <SPIFFS.h>
 
 #include <SPI.h>

@@ -19,11 +19,8 @@ void Light::setRgb(CRGB color) { _state.color = color; }
 void Light::setHsv(int hue, int sat, int val) { _state.color = CHSV(hue, sat, val); }
 void Light::setHsv(CHSV color) { _state.color = color; }
 
-void Light::setColor(String color) {
-    char hexCode[6];
-    color.toCharArray(hexCode, sizeof(hexCode));
-    int newColor = strtol(hexCode, 0, 16);
-    _state.color = newColor;
+void Light::setColor(CRGB color) {
+    _state.color = color;
     return;
 }
 
@@ -73,10 +70,8 @@ void Light::setParam(int p, int v) {
 void Light::setState(State* state) {
     try {
         Serial << "Setting light state: " << "[" << state->name << ": ";
-        if (state->onoff != -1) {
-            Serial << (state->on ? "On" : "Off") << "|";
-            turn(state->onoff);
-        }
+        Serial << (state->on ? "On" : "Off") << "|";
+        turn(state->on);
         if (state->program != "") {
             Serial << "Prog:" << state->program << "|";
             setProgram(state->program);
@@ -85,10 +80,8 @@ void Light::setState(State* state) {
             Serial << "Params...|";
             setParams(state->params);
         }
-        if (state->color != "") {
-            Serial << "Color:" << state->color;
-            setColor(state->color);
-        }
+        Serial << "Color:" << state->color;
+        setColor(state->color);
         Serial << "]\n";
     } catch (int e) {
         Serial << "An Exception occurred: " << e << "\n";
@@ -139,7 +132,7 @@ int Light::_prog_fadeout(int x) {
         _leds[i]->fadeToBlackBy(x);
         if (*_leds[i]) still_fading = true;
     }
-    if (!still_fading) _onoff = false;
+    if (!still_fading) _state.on = false;
     return 0;
 }
 
@@ -197,7 +190,7 @@ int Light::_prog_longfade(int x) {
             _leds[i]->fadeToBlackBy(1);
             if (*_leds[i]) still_fading = true;
         }
-        if (!still_fading) _onoff = false;
+        if (!still_fading) _state.on = false;
     }
     return 0;
 }
